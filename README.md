@@ -16,13 +16,14 @@ The objective of this project is to develop a website similar to the Q&A site St
 
 <h2>Project</h2>
 
-<h2>Team Members (& Discord Names)</h2>
+<h2>Team Members (& Github Names)</h2>
 
 • Ramzi Boucetta (RamB98)<br/>
 • Jacob Lopez (jakelop)<br/>
 • Paul Westenberg (paulwestenberg)<br/>
 • Mouhamed Boubacar Diane (MomooDiane)<br/>
 • Mohammed Al-Taie (MohammedAltaiee)<br/>
+• Alexandre Vallières (SniffyMcTasty)<br/>
 
 <h2>Language and Technologies</h2>
 
