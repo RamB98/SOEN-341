@@ -21,6 +21,7 @@ The objective of this project is to develop a website similar to the Q&A site St
 • Ramzi Boucetta (RamB98)<br/>
 • Jacob Lopez (jakelop)<br/>
 • Mouhamed Boubacar Diane (MomooDiane)<br/>
+• Mohammed Al-Taie (MohammedAltaiee)<br/>
 
 <h2>Language and Technologies</h2>
 
