@@ -16,23 +16,20 @@ The objective of this project is to develop a website similar to the Q&A site St
 
 <h2>Project</h2>
 
-
 <h2>Team Members (& Discord Names)</h2>
 
 • Ramzi Boucetta (RamB98)<br/>
 • Jacob Lopez (jakelop)<br/>
 • Paul Westenberg (paulwestenberg)<br/>
-
-
+• Mouhamed Boubacar Diane (MomooDiane)<br/>
+• Mohammed Al-Taie (MohammedAltaiee)<br/>
 
 <h2>Language and Technologies</h2>
 
 To build the website, we will use a combination of html, css as well as java. We will document, code as well as share said code on GitHub. Github will also be used to track when our team meets, for how long we meet and what we discuss during those meetings
 
-
 <h2>Team log (meeting minutes)</h2>
 
 - Sunday September 19th, Discord meeting:
-    Created repo, explained the description of the project, the objective and technologies we will use. All members were familiarized with github as we all individually added our names using a commit. 
+  Created repo, explained the description of the project, the objective and technologies we will use. All members were familiarized with github as we all individually added our names using a commit.
 - Thursday September 23rd, In person meeting:
-    
