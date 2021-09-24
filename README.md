@@ -35,7 +35,6 @@ To build the website, we will use a combination of html, css as well as java. We
 - Sunday September 19th, Discord meeting:<br/>
   Created repo, explained the description of the project, the objective and technologies we will use.
   All members were familiarized with github as we all individually added our names using a commit.<br/>
-<br/>
 - Thursday September 23rd, blended meeting:<br/>
   Decided to use current repo as github practice, and created new clean repo for 1st sprint.
   Went over the detailed Grading for Sprint 1 and compared with repo to verify if requirements are satisfied.
@@ -43,6 +42,5 @@ To build the website, we will use a combination of html, css as well as java. We
   Finished user stories.
   Created issues and pull requests to satisfy Sprint1 requirements.<br/>
   Next meeting scheduled: Saturday September 25th on Discord.<br/>
-<br/>
 - Saturday September 25th, Discord meeting:<br/>
   
