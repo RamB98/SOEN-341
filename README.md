@@ -24,6 +24,7 @@ The objective of this project is to develop a website similar to the Q&A site St
 • Mouhamed Boubacar Diane (MomooDiane)<br/>
 • Mohammed Al-Taie (MohammedAltaiee)<br/>
 • Alexandre Vallières (SniffyMcTasty)<br/>
+• Samson Kaller (SamsonKaller)<br/>
 
 <h2>Language and Technologies</h2>
 
@@ -31,6 +32,15 @@ To build the website, we will use a combination of html, css as well as java. We
 
 <h2>Team log (meeting minutes)</h2>
 
-- Sunday September 19th, Discord meeting:
-  Created repo, explained the description of the project, the objective and technologies we will use. All members were familiarized with github as we all individually added our names using a commit.
-- Thursday September 23rd, In person meeting:
+- Sunday September 19th, Discord meeting:<br/>
+  Created repo, explained the description of the project, the objective and technologies we will use.
+  All members were familiarized with github as we all individually added our names using a commit.<br/>
+- Thursday September 23rd, blended meeting:<br/>
+  Decided to use current repo as github practice, and created new clean repo for 1st sprint.
+  Went over the detailed Grading for Sprint 1 and compared with repo to verify if requirements are satisfied.
+  Discussed special feature requirement (Options: Profile pic, "Trusted Tutor" badge).
+  Finished user stories.
+  Created issues and pull requests to satisfy Sprint1 requirements.<br/>
+  Next meeting scheduled: Saturday September 25th on Discord.<br/>
+- Saturday September 25th, Discord meeting:<br/>
+  
