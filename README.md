@@ -15,8 +15,8 @@ As a forum user, I want to be able to post a question and be able to receive hel
 As a web user, I want to be able to vote on answers to be able to contribute to popular and prominent responses to forum questions.<br/>
 -Accepting the best answer<br/>
 As a academics user, I want to be able to see reliable responses on a forum that have the most positive votes.<br/>
--Another final feature that we have yet to discuss <br/>
-
+-Special feature: Picture and background info for every user profile <br/>
+As a forum user, I want to be able to verify the credentials of other users that post answers. <br/>
 <h2>Project</h2>
 
 <h2>Team Members (& Github Names)</h2>
@@ -32,7 +32,7 @@ As a academics user, I want to be able to see reliable responses on a forum that
 
 <h2>Language and Technologies</h2>
 
-To build the website, we will use a combination of html, css as well as java. We will document, code as well as share said code on GitHub. Github will also be used to track when our team meets, for how long we meet and what we discuss during those meetings
+To build the website, we will use a combination of HTML, CSS as well as JavaScript JSON. We will document, code as well as share said code on GitHub. Github will also be used to track when our team meets, for how long we meet and what we discuss during those meetings
 
 <h2>Team log (meeting minutes)</h2>
 
@@ -45,6 +45,5 @@ To build the website, we will use a combination of html, css as well as java. We
   Discussed special feature requirement (Options: Profile pic, "Trusted Tutor" badge).
   Finished user stories.
   Created issues and pull requests to satisfy Sprint1 requirements.<br/>
-  Next meeting scheduled: Saturday September 25th on Discord.<br/>
-- Saturday September 25th, Discord meeting:<br/>
-  
+- Saturday September 28th, Discord meeting: <br/>
+  Final review of sprint 1. Decided on the final feature and the technology used. <br/>
