@@ -3,7 +3,7 @@ jobs:
   run_tests:
     docker:
       - image: circleci/python:3.10.0
-    working_directory: ~/
+    working_directory: ../
     steps:
       - checkout
       - run:
