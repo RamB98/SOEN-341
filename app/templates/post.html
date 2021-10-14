@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{%for Userg in answers %}
+<h1></h1>
+<h3 style="border: solid 1px black;display: block;padding:5px ;padding-bottom:20px;background-color:aliceblue;">{{Userg}}</h3>
+{%endfor%}
 <h1>Answer</h1>
 <div>
 <form action="#" method="post">
@@ -14,9 +18,7 @@
 </div>
 
 
-{%for Userg in rolo %}
-<h3 style="border: solid 1px black;display: block;padding:5px ;padding-bottom:20px;background-color:aliceblue;">{{Userg}}</h3>
-{%endfor%}
+
 
 
 

@@ -1,10 +1,10 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_wtf import form
 from . import app
-from app.models import User
+from app.models import Answer
 from app import db
 import random
-value = random.randint(1,3000)
+
 
 
 
@@ -17,16 +17,14 @@ def home():
 @app.route("/post", methods=["POST","GET"])
 def post(): 
     if request.method=="POST":
-       rolo= request.form["nm"]
+       value = random.randint(1,30000)
+       respons= request.form["nm"]
        guest="guest"+str(value)
-       input= User(username=guest, answer=rolo)
+       input= Answer(username=guest, answer=respons)
        db.session.add(input)
        db.session.commit()
-       return redirect("/post")
+       return redirect(url_for('post'))
        #return f"<h1>{rolo}</h1>"
-    else: milo=User.query.all()
-    return render_template('post.html',rolo=milo)
+    else: answers=Answer.query.all()
+    return render_template('post.html',answers=answers)
 
-@app.route("/<usr>")
-def rolo(usr):
-    return f"<h1>{usr}</h/>"
