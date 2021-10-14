@@ -1,5 +1,5 @@
 import unittest
-import app
+from . import app
 
 class TestWebsiteOpens(unittest.TestCase):
 
