@@ -35,6 +35,7 @@ def register_page():
         new_user = User(username=form.username.data, email=form.email.data, password=form.password1.data)
         db.session.add(new_user)
         db.session.commit()
+        flash(f'Success! You have registered a new user: { new_user.username }', category='success')
         return redirect(url_for('home'))
     if form.errors != {}:
         for err_msg in form.errors.values():
