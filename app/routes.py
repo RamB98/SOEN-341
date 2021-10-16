@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_wtf import form
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 from . import app
 from app.models import Answer, User
 from app.forms import RegisterForm, LoginForm
@@ -43,16 +43,22 @@ def register_page():
     return render_template('Register.html', form=form)
 
 @app.route("/post", methods=["POST","GET"])
+@login_required
 def post(): 
     if request.method=="POST":
        value = random.randint(1,30000)
        respons= request.form["nm"]
        guest="guest"+str(value)
-       input= Answer(username=guest, answer=respons)
-       db.session.add(input)
+       input1= Answer(username=guest, answer=respons)
+       db.session.add(input1)
        db.session.commit()
        return redirect(url_for('post'))
-       #return f"<h1>{rolo}</h1>"
+
     else: answers=Answer.query.all()
     return render_template('post.html',answers=answers)
 
+@app.route("/logout")
+def logout_page():
+    logout_user()
+    flash("You have been logged out!", category='info')
+    return redirect(url_for("home"))
