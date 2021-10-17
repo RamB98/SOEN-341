@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block head %} {{ super() }}<title>{% block title %}Homepage{% endblock %}</title>{% endblock %}
+
+<body>
+    {% block navbar %} {{ super() }} {% endblock %}
+
+{% block content %}
+    <main role="main">
+      <br><br>
+<h1>
+  Question Forum
+</h1>
+
+{% endblock %}
+</body>
