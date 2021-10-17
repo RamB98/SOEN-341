@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{%for Userg in answers %}
+{%for Userg in question %}
 <h1></h1>
 <h3 style="border: solid 1px black;display: block;padding:5px ;padding-bottom:20px;background-color:aliceblue;">{{Userg}}</h3>
 {%endfor%}
+<br>
 <h1>Question</h1>
 <div>
 <form action="#" method="post">
