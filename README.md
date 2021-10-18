@@ -8,14 +8,14 @@ This project consists in building a question and answer website, similar to stac
 <h2>Objective</h2> <br/>
 The objective of this project is to develop a website similar to the Q&A site StackOverflow.  We will build a website with three core features as well as a fourth feature that we will mention later on. Furthermore, another objective will be to understand the value of sprints and teamwork as well as to further our knowledge of software processes.
 
-<h2>Core Features with User Stories</h2><br/>
--Asking and answering questions<br/>
+<h2>Core Features with User Stories</h2>
+<h3>Asking and answering questions</h3>
 As a forum user, I want to be able to post a question and receive helpful responses, as well as provide other users with helpful responses to their own questions.<br/>
--Voting on answers<br/>
+<h3>Voting on answers</h3>
 As a web user, I want to be able to vote on answers to contribute to popular and prominent responses to forum questions.<br/>
--Accepting the best answer<br/>
+<h3>Accepting the best answer</h3>
 As a academics user, I want to be able to see reliable responses to a question without having to look at all of them.<br/>
--Special feature: Having user profiles <br/>
+<h3>Special feature: Having user profiles</h3>
 As a forum user, I want to be able to identify myself and other users with credentials, allowing me and others to save our preferences and share our opinions.<br/>
 <h2>Project</h2>
 
