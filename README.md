@@ -10,13 +10,13 @@ The objective of this project is to develop a website similar to the Q&A site St
 
 <h2>Core Features with User Stories</h2><br/>
 -Asking and answering questions<br/>
-As a forum user, I want to be able to post a question and be able to receive helpful responses.<br/>
--Voting on the answers<br/>
-As a web user, I want to be able to vote on answers to be able to contribute to popular and prominent responses to forum questions.<br/>
+As a forum user, I want to be able to post a question and receive helpful responses, as well as provide other users with helpful responses to their own questions.<br/>
+-Voting on answers<br/>
+As a web user, I want to be able to vote on answers to contribute to popular and prominent responses to forum questions.<br/>
 -Accepting the best answer<br/>
-As a academics user, I want to be able to see reliable responses on a forum that have the most positive votes.<br/>
--Special feature: Picture and background info for every user profile <br/>
-As a forum user, I want to be able to verify the credentials of other users that post answers. <br/>
+As a academics user, I want to be able to see reliable responses to a question without having to look at all of them.<br/>
+-Special feature: Having user profiles <br/>
+As a forum user, I want to be able to identify myself and other users with credentials, allowing me and others to save our preferences and share our opinions.<br/>
 <h2>Project</h2>
 
 <h2>Team Members (& Github Names)</h2>
