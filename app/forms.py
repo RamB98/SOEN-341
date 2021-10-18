@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
+from wtforms.fields.simple import TextAreaField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
+from wtforms.widgets.core import TextArea
 from app.models import User
 
 class RegisterForm(FlaskForm):
@@ -25,3 +27,11 @@ class LoginForm(FlaskForm):
     username = StringField(label='User Name:', validators=[DataRequired()])
     password = PasswordField(label='Password:', validators=[DataRequired()])
     submit = SubmitField(label='Sign in')
+
+class PostForm(FlaskForm):
+    title = StringField(label='Title ', validators=[DataRequired()])
+    question = TextAreaField('Enter your question here: ', widget=TextArea(), validators=[DataRequired()])    
+    tags= StringField(label='Tags: ')
+    submit = SubmitField(label='Create Post')
+
+

@@ -7,10 +7,19 @@
 
 {% block content %}
     <main role="main">
-      <br><br>
+      <br>
 <h1>
   Question Forum
 </h1>
+<br>
+
+
+{% for q in allquestions %}
+<h3>Question {{loop.index}}</h3>
+
+<h3 style="border: solid 1px black;display: block;padding:5px ;padding-bottom:20px;background-color:aliceblue;">{{q}}</h3>
+
+{%endfor%}
 
 {% endblock %}
 </body>
