@@ -1,5 +1,7 @@
 from app import db, bcrypt, login_manager
 from flask_login import UserMixin
+import sqlite3
+from sqlite3 import Error
 
 
 @login_manager.user_loader
@@ -33,8 +35,9 @@ class Post(db.Model):
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    title = db.Column(db.String(102), unique=False, nullable=False)
+    username = db.Column(db.String(80), unique=False, nullable=False)
     question = db.Column(db.String(4048), unique=True, nullable=False)
-      
+    
     def __repr__(self):
-        return f'User {self.username} Answer: {self.question}'
+        return f'User {self.username} Question: {self.question}'
