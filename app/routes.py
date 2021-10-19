@@ -98,7 +98,6 @@ def forum_page():
     form = AnswerForm()
     if form.validate_on_submit():
         loggedin = flask_login.current_user
-
         now = datetime.now()
         current_dateandtime = now.strftime("%d/%m/%Y %H:%M:%S")
         new_answer = Answer(
@@ -107,12 +106,13 @@ def forum_page():
         db.session.add(new_answer)
         db.session.commit()
         flash(
-            f'Success! Your question { new_answer.answer } has been created!', category='success')
+            f'Success! Your answer { new_answer.answer } has been saved!', category='success')
         return redirect(url_for('forum_page'))
     else:
         for err_msg in form.errors.values():
             flash(f'User Creation Error: {err_msg}', category='danger')
-    return render_template('Forum.html', allquestions=questions, form=form)
+    answers = Answer.query.all()
+    return render_template('Forum.html', allquestions=questions, allanswers=answers, form=form)
 
 
 @app.route('/viewquestion')
