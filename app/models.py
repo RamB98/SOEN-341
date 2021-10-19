@@ -1,3 +1,4 @@
+from flask.helpers import flash
 from app import db, bcrypt, login_manager
 from flask_login import UserMixin
 import sqlite3
@@ -39,6 +40,15 @@ class Question(db.Model):
     username = db.Column(db.String(80), unique=False, nullable=False)
     question = db.Column(db.String(4048), unique=True, nullable=False)
     questionaskdate = db.Column(db.String(158), unique=False, nullable=False)
+
     
     def __repr__(self):
-        return f'Question: {self.question}, asked by User: {self.username}, User ID: {self.id} , Question Date and Time: {self.questionaskdate}'
+        return f'{self.question},\n\n asked by: {self.username} on {self.questionaskdate}'
+
+class Answer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    answer = db.Column(db.String(150), unique=False, nullable=False)
+    username = db.Column(db.String(102), unique=False, nullable=False)
+    questionbeinganswered = db.Column(db.String(4048), unique=True, nullable=False)
+    answerdate = db.Column(db.String(158), unique=False, nullable=False)
+
