@@ -40,6 +40,11 @@ class LoginForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField(label='Title ', validators=[DataRequired()])
     question = TextAreaField('Enter your question here: ',
-                             widget=TextArea(), validators=[DataRequired()])
+        widget=TextArea(), validators=[DataRequired()])
     tags = StringField(label='Tags: ')
     submit = SubmitField(label='Create Post')
+
+class AnswerForm(FlaskForm):
+    answer = TextAreaField('Enter your Answer to this question here: ',
+    widget=TextArea(), validators=[DataRequired()])
+    submitanswer = SubmitField(label='Submit answer')

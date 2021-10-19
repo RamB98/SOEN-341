@@ -3,8 +3,8 @@ import flask_login
 from flask_wtf import form
 from flask_login import login_user, logout_user, login_required
 from . import app
-from app.models import Question, User
-from app.forms import RegisterForm, LoginForm, PostForm
+from app.models import Answer, Question, User
+from app.forms import AnswerForm, RegisterForm, LoginForm, PostForm
 from app import db
 from datetime import datetime
 import random
@@ -91,14 +91,32 @@ def logout_page():
     return redirect(url_for("home"))
 
 
-@app.route('/forum')
+@app.route('/forum', methods=["POST", "GET"])
 def forum_page():
     questions = Question.query.all()
 
-    return render_template('Forum.html', allquestions=questions)
+    form = AnswerForm()
+    if form.validate_on_submit():
+        loggedin = flask_login.current_user
+
+        now = datetime.now()
+        current_dateandtime = now.strftime("%d/%m/%Y %H:%M:%S")
+        new_answer = Answer(
+            answer=form.answer.data, questionbeinganswered="this question", 
+            username=loggedin.username, answerdate=current_dateandtime)
+        db.session.add(new_answer)
+        db.session.commit()
+        flash(
+            f'Success! Your question { new_answer.answer } has been created!', category='success')
+        return redirect(url_for('forum_page'))
+    else:
+        for err_msg in form.errors.values():
+            flash(f'User Creation Error: {err_msg}', category='danger')
+    return render_template('Forum.html', allquestions=questions, form=form)
 
 
 @app.route('/viewquestion')
 def viewquestion_page():
     questions = Question.query.all()
     return render_template('ViewQuestion.html', allquestions=questions)
+
