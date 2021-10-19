@@ -9,7 +9,7 @@ jobs:
           name: Install Python Dependencies
           command: |
             python -m venv env
-            pip install --user -r requirements.txt
+            pip install --user -r .\requirements.txt
       - run:
           name: Run Unit Tests
           command: |
