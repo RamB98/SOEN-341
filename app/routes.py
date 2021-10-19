@@ -6,6 +6,7 @@ from . import app
 from app.models import Question, User
 from app.forms import RegisterForm, LoginForm, PostForm
 from app import db
+from datetime import datetime
 import random
 
 
@@ -55,8 +56,11 @@ def post():
     form = PostForm()
     if form.validate_on_submit():
         loggedin = flask_login.current_user
+        now = datetime.now()
+        current_dateandtime = now.strftime("%d/%m/%Y %H:%M:%S")
         new_question = Question(
-            title=form.title.data, question=form.question.data, username=loggedin.username)
+            title=form.title.data, question=form.question.data, 
+            username=loggedin.username, questionaskdate=current_dateandtime)
         db.session.add(new_question)
         db.session.commit()
         flash(

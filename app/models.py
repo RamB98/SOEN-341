@@ -38,6 +38,7 @@ class Question(db.Model):
     title = db.Column(db.String(102), unique=False, nullable=False)
     username = db.Column(db.String(80), unique=False, nullable=False)
     question = db.Column(db.String(4048), unique=True, nullable=False)
+    questionaskdate = db.Column(db.String(158), unique=False, nullable=False)
     
     def __repr__(self):
-        return f'User {self.username} Question: {self.question}'
+        return f'Question: {self.question}, asked by User: {self.username}, User ID: {self.id} , Question Date and Time: {self.questionaskdate}'
