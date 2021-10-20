@@ -93,28 +93,28 @@ def logout_page():
 
 @app.route('/forum', methods=["POST", "GET"])
 def forum_page():
-    q = Question.query.all()
-    return render_template('Forum.html', questions=q)
+    quest = Question.query.all()
+    form = AnswerForm()
+    if form.validate_on_submit():
+        loggedin = flask_login.current_user
+        now = datetime.now()
+        current_dateandtime = now.strftime("%d/%m/%Y %H:%M:%S")
+        new_answer = Answer(
+            answer=form.answer.data, questionbeinganswered="this question", 
+            username=loggedin.username, answerdate=current_dateandtime)
+        db.session.add(new_answer)
+        db.session.commit()
+        flash(f'Success! Your answer { new_answer.answer } has been saved!', category='success')
+        return redirect(url_for('forum_page'))
+    else:
+        for err_msg in form.errors.values():
+            flash(f'User Creation Error: {err_msg}', category='danger')
+    answers = Answer.query.all()
+    return render_template('Forum.html', questions=quest, allanswers=answers, form=form)
 
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
-    form = AnswerForm()
-
-    if request.method == 'GET':
-        qTitle = request.args.get('question')
-        question = Question.query.filter_by(title=qTitle).first()
-        q_id = question.id
-        ans = request.args.get('answer')
-        if ans:
-            loggedin = flask_login.current_user
-            now = datetime.now()
-            current_dateandtime = now.strftime("%d/%m/%Y %H:%M:%S")
-            new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime)
-            db.session.add(new_answer)
-            db.session.commit()
-            flash(f'Success! Your answer has been saved!', category='success')
-        answers = Answer.query.filter_by(question_id=q_id)
-    
-    return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
+    questions = Question.query.all()
+    return render_template('ViewQuestion.html', allquestions=questions)
 

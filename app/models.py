@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(60), nullable=False)
-    posts = db.relationship('Post', backref='owned_user', lazy=True)
+#    posts = db.relationship('Post', backref='owned_user', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -30,9 +30,9 @@ class User(db.Model, UserMixin):
     def check_correct_password(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
     
-class Post(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
+#class Post(db.Model):
+#    id = db.Column(db.Integer(), primary_key=True)
+#    owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,7 +48,10 @@ class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     answer = db.Column(db.String(150), unique=False, nullable=False)
     username = db.Column(db.String(102), unique=False, nullable=False)
-    questionbeinganswered = db.Column(db.String(4048), unique=False, nullable=False)
+    question_id = db.Column(db.Integer, unique=False, nullable=False)
     answerdate = db.Column(db.String(158), unique=False, nullable=False)
     def __repr__(self):
         return f'{self.answer}, answered by {self.username} on {self.answerdate}'
+
+    def __iter__(self):
+        self.num = 1
