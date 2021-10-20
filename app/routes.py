@@ -100,10 +100,21 @@ def forum_page():
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
     form = AnswerForm()
+
     if request.method == 'GET':
         qTitle = request.args.get('question')
         question = Question.query.filter_by(title=qTitle).first()
         q_id = question.id
-        answers = Answer.query.filter_by(question_id=q_id).first()
+        ans = request.args.get('answer')
+        if ans:
+            loggedin = flask_login.current_user
+            now = datetime.now()
+            current_dateandtime = now.strftime("%d/%m/%Y %H:%M:%S")
+            new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime)
+            db.session.add(new_answer)
+            db.session.commit()
+            flash(f'Success! Your answer has been saved!', category='success')
+        answers = Answer.query.filter_by(question_id=q_id)
+    
     return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
 

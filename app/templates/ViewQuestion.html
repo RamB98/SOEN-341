@@ -35,12 +35,15 @@
 
 	<br><br>
 
+<form method="GET" class="form-answer">
 	<h2>Add an Answer:</h2>
-	
+	<input type="hidden" name="question" value="{{ question.title }}" />
+
 	{{ form.answer.label() }}
     {{ form.answer(placeholder="New Answer") }}  
 
     {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+</form>
 
 {% endblock %}
 </body>
