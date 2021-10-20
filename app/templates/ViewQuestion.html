@@ -1,20 +1,46 @@
-{% extends 'base.html' %} {% block content %}
-<br />
-<h1>Question Review</h1>
+{% extends "base.html" %}
 
-<h3
-  style="
-    border: solid 1px black;
-    display: block;
-    padding: 5px;
-    padding-bottom: 20px;
-    background-color: aliceblue;
-  "
->
-  {% block allquestions %} {{allquestions.2}}
-</h3>
+{% block head %} {{ super() }}<title>{% block title %}Login{% endblock %}</title>{% endblock %}
+
+{% block content %}
+<body>
+    {% block navbar %} {{ super() }} {% endblock %}
+
+    <main role="main">
+	<br>
+	<br>
+	<h1>{{ question.title }}</h1>
+	
+	<p>{{ question.question }}</p>
+	<br>
+
+	<h2>Answers:</h2>
+	
+	{% if answers %}
+
+		{% for a in answers %}
+
+			<p>
+				Response by {{ a.username }}:
+				<br><br>
+
+				{{ a.answer }}
+			</p>
+	
+		{% endfor %}
+
+	{% else %}
+		<p>Unfortunately, no answers have been submitted yet. Please try again later!</p>
+	{% endif %}
+
+	<br><br>
+
+	<h2>Add an Answer:</h2>
+	
+	{{ form.answer.label() }}
+    {{ form.answer(placeholder="New Answer") }}  
+
+    {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+
 {% endblock %}
-<br />
-
-
-{% endblock %} {% block foot %} {% endblock %}
+</body>

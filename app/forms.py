@@ -45,6 +45,5 @@ class PostForm(FlaskForm):
     submit = SubmitField(label='Create Post')
 
 class AnswerForm(FlaskForm):
-    answer = TextAreaField('Enter your Answer to this question here: ',
-    widget=TextArea(), validators=[DataRequired()])
-    submitanswer = SubmitField(label='Submit answer')
+    answer = TextAreaField('Enter your Answer to this question here:',widget=TextArea(), validators=[DataRequired()])
+    submit = SubmitField(label='Submit')
