@@ -41,7 +41,6 @@ class Question(db.Model):
     question = db.Column(db.String(4048), unique=True, nullable=False)
     questionaskdate = db.Column(db.String(158), unique=False, nullable=False)
 
-    
     def __repr__(self):
         return f'{self.question},\n\n asked by: {self.username} on {self.questionaskdate}'
 
@@ -49,6 +48,7 @@ class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     answer = db.Column(db.String(150), unique=False, nullable=False)
     username = db.Column(db.String(102), unique=False, nullable=False)
-    questionbeinganswered = db.Column(db.String(4048), unique=True, nullable=False)
+    questionbeinganswered = db.Column(db.String(4048), unique=False, nullable=False)
     answerdate = db.Column(db.String(158), unique=False, nullable=False)
-
+    def __repr__(self):
+        return f'{self.answer}, answered by {self.username} on {self.answerdate}'
