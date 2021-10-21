@@ -38,12 +38,13 @@ class LoginForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    title = StringField(label='Title ', validators=[DataRequired()])
+    title = TextAreaField('Title ', 
+        widget=TextArea(), validators=[DataRequired()])
     question = TextAreaField('Enter your question here: ',
         widget=TextArea(), validators=[DataRequired()])
     tags = StringField(label='Tags: ')
     submit = SubmitField(label='Create Post')
 
 class AnswerForm(FlaskForm):
-    answer = TextAreaField('Enter your Answer to this question here:',widget=TextArea(), validators=[DataRequired()])
-    submit = SubmitField(label='Submit')
+    answer = TextAreaField('Enter your answer to this question here:',widget=TextArea(), validators=[DataRequired()])
+    submit = SubmitField(label='Post Answer')

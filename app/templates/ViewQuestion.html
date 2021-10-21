@@ -8,23 +8,34 @@
 
     <main role="main">
 	<br>
-	<br>
-	<h1>{{ question.title }}</h1>
 	
-	<p>{{ question.question }}</p>
+	<h2 style="margin-left: 10px">{{ question.title }}</h2>
+	
+	<a class="text" style="margin-left: 30px">{{ question.question }}</a>
+
+	<p style="margin-left: 300px">Asked by {{question.username}} on {{ question.questionaskdate}}</p>
+
 	<br>
 
-	<h2>Answers:</h2>
+	{% if answers %}
+
+	<h4 style="margin-left: 10px">{{ answers.count() }} Answers: </h4>
+
+	{% else %}
 	
+	<h4 style="margin-left: 10px">Answers: </h4>
+
+	{% endif %}
+
 	{% if answers %}
 
 		{% for a in answers %}
 
 			<p>
-				Response by {{ a.username }}:
-				<br><br>
+				<a class="text" style="margin-left: 10px">Response by {{ a.username }} on {{a.answerdate}}</a>
+				<br>
 
-				{{ a.answer }}
+				<a class="text" style="margin-left: 40px">{{ a.answer }}</a>
 			</p>
 	
 		{% endfor %}
@@ -35,14 +46,35 @@
 
 	<br><br>
 
+	<style>
+		.centerstuff{
+			text-align: center;
+		}
+		.button{
+			margin: 0;
+			position: relative;
+  			top: 50%;
+  			left: 70%;
+			font-size: 20px;
+			color: white;
+			background: rgb(20, 123, 220);
+			border: 2px solid rgb(37, 34, 34);
+			border-radius: 10px;
+			padding-top: 10px;
+			padding-bottom: 10px;
+			padding-right: 20px;
+			padding-left: 20px;
+		}
+	</style>
 <form method="GET" class="form-answer">
-	<h2>Add an Answer:</h2>
+	<h2 style="margin-left: 10px">Have something you would like to add?</h2>
 	<input type="hidden" name="question" value="{{ question.title }}" />
+	<dl>
+		<dt style="margin-left: 100px"> {{ form.answer.label() }}
+		<dd><div class="centerstuff">{{ form.answer(cols="90", rows="10", placeholder="New Answer") }} </div>
+	</dl>
 
-	{{ form.answer.label() }}
-    {{ form.answer(placeholder="New Answer") }}  
-
-    {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+    {{ form.submit(class="button") }}
 </form>
 
 {% endblock %}

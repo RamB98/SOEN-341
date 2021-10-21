@@ -12,9 +12,14 @@
 
 	<div>
 		{% for q in questions %}
-		<h6>
-			<a class="text" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
-		</h6>
+		<h4>
+			<a class="text" style="margin-left: 10px" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
+    </h4>
+    <h6>
+      <a class="text" style="margin-left: 40px">Asked by {{q.username}} on {{ q.questionaskdate}}</a>
+    </h6>
+      <br>
+		
 		{% endfor %}
 	</div>
 
