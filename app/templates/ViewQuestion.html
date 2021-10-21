@@ -11,9 +11,54 @@
 	
 	<h2 style="margin-left: 10px">{{ question.title }}</h2>
 	
-	<a class="text" style="margin-left: 30px">{{ question.question }}</a>
+	<h5 class="text" style="margin-left: 30px">{{ question.question }}</h5>
 
 	<p style="margin-left: 300px">Asked by {{question.username}} on {{ question.questionaskdate}}</p>
+
+	<style>
+		.upvotequestion {
+			margin-left: 4px;
+  			width: 13%;
+  			padding: 10px;
+  			background-color: #04AA6D;
+  			color: white;
+  			font-size: 15px;
+		}
+		.downvotequestion {
+			margin-left: 4px;
+  			width: 13%;
+  			padding: 10px;
+  			background-color: red;
+  			color: white;
+  			font-size: 15px;
+		}
+		.upvoteanswer {
+			margin-left: 4px;
+			width: 2.50%;
+  			padding: 5px;
+  			background-color: #04AA6D;
+  			color: white;
+  			font-size: 15px;
+			text-align: center;
+			border-radius: 5px;
+		}
+		.downvoteanswer {
+  			width: 2.50%;
+  			padding: 4px;
+  			background-color: red;
+  			color: white;
+  			font-size: 15px;
+			text-align: center;
+			border-radius: 5px;
+		}
+		
+	</style>
+
+	<div>
+	<button type="button" class="upvotequestion">Upvote Question &#11014</button>
+	<button type="button" class="downvotequestion">Downvote Question &#11015</button>
+	
+	</div>
 
 	<br>
 
@@ -30,13 +75,19 @@
 	{% if answers %}
 
 		{% for a in answers %}
-
+		<div>
 			<p>
-				<a class="text" style="margin-left: 10px">Response by {{ a.username }} on {{a.answerdate}}</a>
+				
+				<button type="button" class="upvoteanswer">&#11014</button>
+				<button type="button" class="downvoteanswer">&#11015</button>
+				
+				<a class="text" style="margin-left: 0px">Response by {{ a.username }} on {{a.answerdate}}</a>
 				<br>
 
-				<a class="text" style="margin-left: 40px">{{ a.answer }}</a>
+				<a class="text" style="margin-left: 120px">{{ a.answer }}</a>
+			
 			</p>
+		</div>
 	
 		{% endfor %}
 
