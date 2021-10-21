@@ -21,13 +21,13 @@ As a forum user, I want to be able to identify myself and other users with crede
 
 <h2>Team Members (& Github Names)</h2>
 
+• <b>Team Leader:</b> Samson Kaller (SamsonKaller)<br>
 • Ramzi Boucetta (RamB98)<br/>
 • Jacob Lopez (jakelop)<br/>
 • Paul Westenberg (paulwestenberg)<br/>
 • Mouhamed Boubacar Diane (MomooDiane)<br/>
 • Mohammed Al-Taie (MohammedAltaiee)<br/>
 • Alexandre Vallières (SniffyMcTasty)<br/>
-• Samson Kaller (SamsonKaller)<br/>
 • Derek Dorrance (derekdorrance)<br/>
 
 <h2>Language and Technologies</h2>
