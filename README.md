@@ -36,14 +36,54 @@ To build the website, we will use a combination of HTML, CSS as well as JavaScri
 
 <h2>Team log (meeting minutes)</h2>
 
-- Sunday September 19th, Discord meeting:<br/>
+- Sunday September 19th, Discord meeting:
+  <br>
   Created repo, explained the description of the project, the objective and technologies we will use.
-  All members were familiarized with github as we all individually added our names using a commit.<br/>
-- Thursday September 23rd, blended meeting:<br/>
+  All members were familiarized with github as we all individually added our names using a commit.
+  <br>
+- Thursday September 23rd, blended meeting:
+  <br>
   Decided to use current repo as github practice, and created new clean repo for 1st sprint.
   Went over the detailed Grading for Sprint 1 and compared with repo to verify if requirements are satisfied.
   Discussed special feature requirement (Options: Profile pic, "Trusted Tutor" badge).
   Finished user stories.
-  Created issues and pull requests to satisfy Sprint1 requirements.<br/>
-- Saturday September 28th, Discord meeting: <br/>
-  Final review of sprint 1. Decided on the final feature and the technology used. <br/>
+  Created issues and pull requests to satisfy Sprint1 requirements.
+  <br>
+- Saturday September 28th, Discord meeting:
+  <br>
+  Final review of sprint 1. Decided on the final feature and the technology used.
+  <br>
+- Saturday, October 2nd:
+  <br>
+  Discussed models being used for the website database: User, Question and Answer tables.
+  Discussed user stories and planning poker for points, priority, risk, description.
+  <br>
+- Wednesday, October 6th:
+  <br>
+  Decided core feature to be completed first is the Asking & Answering Questions user story.
+  Demo of python flask API for the website design.
+  <br>
+- Monday, October 11th:
+  <br>
+  Homepage implemented, demo of current site to team.
+  Discussed adding continous integration platform TravisCI to repo for testing.
+  Next features to be worked on: Register and Login User.
+  <br>
+- Thursday, October 14th:
+  <br>
+  CircleCI installed to repo, attempted tests but unsucessful.
+  Decided to focus on website and leave CI for sprint 3.
+  Discussed forms and html page content for register and login page.
+  Next feature to implement: posting a question.
+  <br>
+- Sunday, October 17th:
+  <br>
+  Demo of registering/login and posting a question to website to team.
+  Decided on creating forum page for browsing posted questions, then answer page when clicking the question.
+  Next feature: answer pages.
+  <br>
+- Wednesday, October 20th:
+  <br>
+  Asking and answering questions feature completed.
+  Demo of website to team.
+  Reviewed requirements for Sprint 2 against current website status.
