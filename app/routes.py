@@ -57,7 +57,7 @@ def post():
     if form.validate_on_submit():
         loggedin = flask_login.current_user
         now = datetime.now()
-        current_dateandtime = now.strftime("%d/%m/%Y %H:%M:%S")
+        current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
         new_question = Question(
             title=form.title.data, question=form.question.data, 
             username=loggedin.username, questionaskdate=current_dateandtime)
@@ -100,21 +100,49 @@ def forum_page():
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
     form = AnswerForm()
-
+    argcount = 0
     if request.method == 'GET':
         qTitle = request.args.get('question')
+        ans = request.args.get('answer')
+        if qTitle:
+            argcount = 1
+        if ans:
+            argcount = 2
         question = Question.query.filter_by(title=qTitle).first()
         q_id = question.id
-        ans = request.args.get('answer')
-        if ans:
-            loggedin = flask_login.current_user
-            now = datetime.now()
-            current_dateandtime = now.strftime("%d/%m/%Y %H:%M:%S")
-            new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime)
-            db.session.add(new_answer)
-            db.session.commit()
-            flash(f'Success! Your answer has been saved!', category='success')
+    if argcount==1:
         answers = Answer.query.filter_by(question_id=q_id)
+        return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
+    if argcount==2:
+        loggedin = flask_login.current_user
+        now = datetime.now()
+        current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
+        new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime)
+        db.session.add(new_answer)
+        db.session.commit()
+        flash(f'Success! Your answer has been posted!', category='success')
+        answers = Answer.query.filter_by(question_id=q_id)
+        return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
+
+
+
+
+    # if request.method == 'GET':
+    #     qTitle = request.args.get('question')
+    #     question = Question.query.filter_by(title=qTitle).first()
+    #     q_id = question.id
+    #     ans = request.args.get('answer')
+    #     request.args.
+
+    #     if ans:
+    #         loggedin = flask_login.current_user
+    #         now = datetime.now()
+    #         current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
+    #         new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime)
+    #         db.session.add(new_answer)
+    #         db.session.commit()
+    #         flash(f'Success! Your answer has been posted!', category='success')
+    #     answers = Answer.query.filter_by(question_id=q_id)
     
-    return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
+    # return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
 
