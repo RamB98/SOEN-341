@@ -28,7 +28,6 @@ As a forum user, I want to be able to identify myself and other users with crede
 • Mouhamed Boubacar Diane (MomooDiane)<br/>
 • Mohammed Al-Taie (MohammedAltaiee)<br/>
 • Alexandre Vallières (SniffyMcTasty)<br/>
-• Derek Dorrance (derekdorrance)<br/>
 
 <h2>Language and Technologies</h2>
 
