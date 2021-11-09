@@ -48,3 +48,12 @@ class PostForm(FlaskForm):
 class AnswerForm(FlaskForm):
     answer = TextAreaField('Enter your answer to this question here:',widget=TextArea(), validators=[DataRequired()])
     submit = SubmitField(label='Post Answer')
+    answerupvote = TextAreaField('Enter your answer to this question here:',widget=TextArea(), validators=[DataRequired()])
+    submitupvote = SubmitField(label='upvote question')
+    answerdownvote = TextAreaField('Enter your answer to this question here:',widget=TextArea(), validators=[DataRequired()])
+    submitdownvote = SubmitField(label='downvote question')
+
+class QuestionVotingForm(FlaskForm):
+    submitupvote = SubmitField(label='Upvote Question')
+    submitdownvote = SubmitField(label='Downvote Question')
+

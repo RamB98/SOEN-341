@@ -4,7 +4,7 @@ from flask_wtf import form
 from flask_login import login_user, logout_user, login_required
 from . import app
 from app.models import Answer, Question, User
-from app.forms import AnswerForm, RegisterForm, LoginForm, PostForm
+from app.forms import AnswerForm, RegisterForm, LoginForm, PostForm, QuestionVotingForm
 from app import db
 from datetime import datetime
 import random
@@ -60,7 +60,8 @@ def post():
         current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
         new_question = Question(
             title=form.title.data, question=form.question.data, 
-            username=loggedin.username, questionaskdate=current_dateandtime)
+            username=loggedin.username, questionaskdate=current_dateandtime,
+            qrating=0)
         db.session.add(new_question)
         db.session.commit()
         flash(
@@ -99,31 +100,82 @@ def forum_page():
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
-    form = AnswerForm()
-    argcount = 0
-    if request.method == 'GET':
-        qTitle = request.args.get('question')
-        ans = request.args.get('answer')
-        if qTitle:
-            argcount = 1
-        if ans:
-            argcount = 2
-        question = Question.query.filter_by(title=qTitle).first()
-        q_id = question.id
-    if argcount==1:
-        answers = Answer.query.filter_by(question_id=q_id)
-        return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
-    if argcount==2:
-        loggedin = flask_login.current_user
-        now = datetime.now()
-        current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
-        new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime)
-        db.session.add(new_answer)
-        db.session.commit()
-        flash(f'Success! Your answer has been posted!', category='success')
-        answers = Answer.query.filter_by(question_id=q_id)
-        return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
+    answerform = AnswerForm()
+    questionvotingform = QuestionVotingForm()
+    # voteonquestionform = QuestionVotingForm()
+    if  answerform.validate_on_submit:
+        argcount = 0
+        if request.method == 'GET':
+            qTitle = request.args.get('question')
+            ans = request.args.get('answer')
+            upvote = request.args.get('answerupvote')
+            downvote = request.args.get('answerdownvote')
+            if qTitle:
+                argcount = 1
+            if ans:
+                argcount = 2
+            question = Question.query.filter_by(title=qTitle).first()
+            q_id = question.id
+            if upvote:
+                question.qrating = question.qrating+1
+                db.session.commit()
+                flash('upvote and incremented', category='success')
+            if downvote:
+                question.qrating = question.qrating-1
+                db.session.commit()
+                flash('downvote and decremented', category='danger')
+        # if request.method == 'POST':
+        #     if request.form.action == 'upvote':
+        #         question.qrating = question.qrating+1
+        #         db.session.commit()
+        #         flash('upvote and incremented', category='success')
+        #     if request.form.action == 'downvote':
+        #         question.qrating = question.qrating-1
+        #         db.session.commit()
+        #         flash('upvote and incremented', category='danger')
+        if argcount==1:
+            answers = Answer.query.filter_by(question_id=q_id)
+            return render_template('ViewQuestion.html', form=answerform, question=question, answers=answers)
+        if argcount==2:
+            loggedin = flask_login.current_user
+            now = datetime.now()
+            current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
+            new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username,
+            answerdate=current_dateandtime, arating=0)
+            db.session.add(new_answer)
+            db.session.commit()
+            flash(f'Success! Your answer has been posted!', category='success')
+            answers = Answer.query.filter_by(question_id=q_id)
+            return render_template('ViewQuestion.html', form=answerform, question=question, answers=answers)
+    else:
+        for err_msg in form.errors.values():
+            flash(f'User Creation Error: {err_msg}', category='danger')
+    if questionvotingform.validate_on_submit:
+        flash('am I working')
+        # qTitle = request.args.get('question')
+        # question = Question.query.filter_by(title=qTitle).first()
+        # question.qrating = question.qrating+1
+        # db.session.commit()
+    return render_template('ViewQuestion.html', form=answerform, question=question, answers=answers)
 
+# @app.route("/votequestion/", methods=['POST'])
+# def voteonquestion():
+#     form = QuestionVotingForm()
+#     if form.validate_on_submit():
+#         new_question = 
+#         db.session.add()
+#         db.session.commit()
+#         flash(
+#             f'Success! Your question { new_question.title } has been created!', category='success')
+#         return redirect(url_for('forum_page'))
+#     else:
+#         for err_msg in form.errors.values():
+#             flash(f'User Creation Error: {err_msg}', category='danger')
+#     return render_template('post.html', form=form)
+# @app.route('/viewquestionupdated')
+# def viewquestionupdated_page():
+#     flash(f'Success! we made it', category='success')
+#     return render_template('ViewQuestion.html')
 
 
 

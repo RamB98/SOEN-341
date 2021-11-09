@@ -13,7 +13,8 @@
 	
 	<h5 class="text" style="margin-left: 30px">{{ question.question }}</h5>
 
-	<p style="margin-left: 300px">Asked by {{question.username}} on {{ question.questionaskdate}}</p>
+	<p style="margin-left: 300px">Asked by {{question.username}} on {{ question.questionaskdate}}
+		with a rating of {{question.qrating}}</p>
 
 	<style>
 		.upvotequestion {
@@ -54,8 +55,32 @@
 		
 	</style>
 
+
+	<script>
+		function myFunction(elmnt,clr) {
+		  elmnt.style.color = clr;
+		  
+		}	
+	</script>
+
+	<form method="GET" class="form-banana">
+		<h2 style="margin-left: 10px">Upvote?</h2>
+		<input type="hidden" name="question" value="{{ question.title }}" />
+		<div class="centerstuff">{{ form.answerupvote(cols="90", rows="10", placeholder="New Answer") }} </div>
+		{{ form.submitupvote(class="button") }}
+	</form>
+	<form method="GET" class="form-banana">
+		<h2 style="margin-left: 10px">Downvote?</h2>
+		<input type="hidden" name="question" value="{{ question.title }}" />
+		<div class="centerstuff">{{ form.answerdownvote(cols="90", rows="10", placeholder="New Answer") }} </div>
+		{{ form.submitdownvote(class="button") }}
+	</form>
+
+
+
 	<div>
-	<button type="button" class="upvotequestion">Upvote Question &#11014</button>
+	<button type="button" class="upvotequestion" name="upvotequestion" value="UpVote">Upvote Question &#11014 
+	{{question.qrating}}</button>
 	<button type="button" class="downvotequestion">Downvote Question &#11015</button>
 	
 	</div>
@@ -81,7 +106,8 @@
 				<button type="button" class="upvoteanswer">&#11014</button>
 				<button type="button" class="downvoteanswer">&#11015</button>
 				
-				<a class="text" style="margin-left: 0px">Response by {{ a.username }} on {{a.answerdate}}</a>
+				<a class="text" style="margin-left: 0px">Response by {{ a.username }} on {{a.answerdate}} 
+					with a rating of {{a.arating}}</a>
 				<br>
 
 				<a class="text" style="margin-left: 120px">{{ a.answer }}</a>
