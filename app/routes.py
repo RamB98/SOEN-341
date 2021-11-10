@@ -118,7 +118,7 @@ def viewquestion_page():
         loggedin = flask_login.current_user
         now = datetime.now()
         current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
-        new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime)
+        new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime, upvotes=0, downvotes=0)
         db.session.add(new_answer)
         db.session.commit()
         flash(f'Success! Your answer has been posted!', category='success')
@@ -148,6 +148,36 @@ def downvote_question():
 
         if question:
             setattr(question, "downvotes", question.downvotes + 1)
+            db.session.commit()
+        else:
+            print('No question given')
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
+
+@app.route('/upvoteAnswer', methods=["GET"])
+def upvote_answer():
+    if request.method=='GET':
+        q_title = request.args.get('question')
+        a_id = request.args.get('answer')
+        print('The value of a_id is: ' + a_id)
+        answer = Answer.query.filter_by(id=a_id).first()
+
+        if answer:
+            setattr(answer, "upvotes", answer.upvotes + 1)
+            db.session.commit()
+        else:
+            print('No question given')
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
+
+@app.route('/downvoteAnswer', methods=["GET"])
+def downvote_answer():
+    if request.method=='GET':
+        q_title = request.args.get('question')
+        a_id = request.args.get('answer')
+        print('The value of a_id is: ' + a_id)
+        answer = Answer.query.filter_by(id=a_id).first()
+
+        if answer:
+            setattr(answer, "downvotes", answer.downvotes + 1)
             db.session.commit()
         else:
             print('No question given')

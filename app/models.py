@@ -52,6 +52,9 @@ class Answer(db.Model):
     username = db.Column(db.String(102), unique=False, nullable=False)
     question_id = db.Column(db.Integer, unique=False, nullable=False)
     answerdate = db.Column(db.String(158), unique=False, nullable=False)
+    upvotes = db.Column(db.Integer, nullable=False)
+    downvotes = db.Column(db.Integer, nullable=False)
+
     def __repr__(self):
         return f'{self.answer}, answered by {self.username} on {self.answerdate}'
 
