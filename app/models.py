@@ -40,6 +40,8 @@ class Question(db.Model):
     username = db.Column(db.String(80), unique=False, nullable=False)
     question = db.Column(db.String(4048), unique=True, nullable=False)
     questionaskdate = db.Column(db.String(158), unique=False, nullable=False)
+    upvotes = db.Column(db.Integer, nullable=False)
+    downvotes = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return f'{self.question},\n\n asked by: {self.username} on {self.questionaskdate}'

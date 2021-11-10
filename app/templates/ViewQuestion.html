@@ -18,15 +18,16 @@
 	<style>
 		.upvotequestion {
 			margin-left: 4px;
-  			width: 13%;
+  			width: 10%;
   			padding: 10px;
   			background-color: #04AA6D;
   			color: white;
   			font-size: 15px;
+
 		}
 		.downvotequestion {
 			margin-left: 4px;
-  			width: 13%;
+  			width:10%;
   			padding: 10px;
   			background-color: red;
   			color: white;
@@ -55,11 +56,15 @@
 	</style>
 
 	<div>
-	<button type="button" class="upvotequestion">Upvote Question &#11014</button>
-	<button type="button" class="downvotequestion">Downvote Question &#11015</button>
-	
+		<form action="/upvoteQuestion" methods="GET">
+			<input type="hidden" name="question" value="{{ question.title }}">
+			<input type="submit" value="Upvote &#11014 {{question.upvotes}}" class="upvotequestion">
+		</form>
+		<form action="/downvoteQuestion" methods="GET">
+			<input type="hidden" name="question" value="{{ question.title }}">
+			<input type="submit" value="Downvote &#11015 {{question.downvotes}}" class="downvotequestion">
+		</form>
 	</div>
-
 	<br>
 
 	{% if answers %}
