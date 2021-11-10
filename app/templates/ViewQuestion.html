@@ -18,15 +18,16 @@
 	<style>
 		.upvotequestion {
 			margin-left: 4px;
-  			width: 13%;
+  			width: 10%;
   			padding: 10px;
   			background-color: #04AA6D;
   			color: white;
   			font-size: 15px;
+
 		}
 		.downvotequestion {
 			margin-left: 4px;
-  			width: 13%;
+  			width:10%;
   			padding: 10px;
   			background-color: red;
   			color: white;
@@ -34,7 +35,7 @@
 		}
 		.upvoteanswer {
 			margin-left: 4px;
-			width: 2.50%;
+			width: 5%;
   			padding: 5px;
   			background-color: #04AA6D;
   			color: white;
@@ -43,7 +44,8 @@
 			border-radius: 5px;
 		}
 		.downvoteanswer {
-  			width: 2.50%;
+			margin-left: 4px;
+  			width: 5%;
   			padding: 4px;
   			background-color: red;
   			color: white;
@@ -55,11 +57,15 @@
 	</style>
 
 	<div>
-	<button type="button" class="upvotequestion">Upvote Question &#11014</button>
-	<button type="button" class="downvotequestion">Downvote Question &#11015</button>
-	
+		<form action="/upvoteQuestion" methods="GET">
+			<input type="hidden" name="question" value="{{ question.title }}">
+			<input type="submit" value="Upvote &#11014 {{question.upvotes}}" class="upvotequestion">
+		</form>
+		<form action="/downvoteQuestion" methods="GET">
+			<input type="hidden" name="question" value="{{ question.title }}">
+			<input type="submit" value="Downvote &#11015 {{question.downvotes}}" class="downvotequestion">
+		</form>
 	</div>
-
 	<br>
 
 	{% if answers %}
@@ -78,8 +84,16 @@
 		<div>
 			<p>
 				
-				<button type="button" class="upvoteanswer">&#11014</button>
-				<button type="button" class="downvoteanswer">&#11015</button>
+				<form action="/upvoteAnswer" methods="GET">
+					<input type="hidden" name="question" value="{{ question.title }}">
+					<input type="hidden" name="answer" value="{{ a.id }}">
+					<input type="submit" value="&#11014 {{a.upvotes}}" class="upvoteanswer">
+				</form>
+				<form action="/downvoteAnswer" methods="GET">
+					<input type="hidden" name="question" value="{{ question.title }}">
+					<input type="hidden" name="answer" value="{{ a.id }}">
+					<input type="submit" value="&#11015 {{a.downvotes}}" class="downvoteanswer">
+				</form>
 				
 				<a class="text" style="margin-left: 0px">Response by {{ a.username }} on {{a.answerdate}}</a>
 				<br>

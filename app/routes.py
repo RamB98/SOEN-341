@@ -60,7 +60,8 @@ def post():
         current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
         new_question = Question(
             title=form.title.data, question=form.question.data, 
-            username=loggedin.username, questionaskdate=current_dateandtime)
+            username=loggedin.username, questionaskdate=current_dateandtime,
+            upvotes=0, downvotes=0)
         db.session.add(new_question)
         db.session.commit()
         flash(
@@ -117,32 +118,67 @@ def viewquestion_page():
         loggedin = flask_login.current_user
         now = datetime.now()
         current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
-        new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime)
+        new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime, upvotes=0, downvotes=0)
         db.session.add(new_answer)
         db.session.commit()
         flash(f'Success! Your answer has been posted!', category='success')
         answers = Answer.query.filter_by(question_id=q_id)
         return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
 
+@app.route('/upvoteQuestion', methods=["GET"])
+def upvote_question():
+    if request.method=='GET':
+        q_title = request.args.get('question')
+        print('The value of q_title is: ' + q_title)
+        question = Question.query.filter_by(title=q_title).first()
 
+        if question:
+            setattr(question, "upvotes", question.upvotes + 1)
+            db.session.commit()
+        else:
+            print('No question given')
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
 
+@app.route('/downvoteQuestion', methods=["GET"])
+def downvote_question():
+    if request.method=='GET':
+        q_title = request.args.get('question')
+        print('The value of q_title is: ' + q_title)
+        question = Question.query.filter_by(title=q_title).first()
 
-    # if request.method == 'GET':
-    #     qTitle = request.args.get('question')
-    #     question = Question.query.filter_by(title=qTitle).first()
-    #     q_id = question.id
-    #     ans = request.args.get('answer')
-    #     request.args.
+        if question:
+            setattr(question, "downvotes", question.downvotes + 1)
+            db.session.commit()
+        else:
+            print('No question given')
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
 
-    #     if ans:
-    #         loggedin = flask_login.current_user
-    #         now = datetime.now()
-    #         current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
-    #         new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime)
-    #         db.session.add(new_answer)
-    #         db.session.commit()
-    #         flash(f'Success! Your answer has been posted!', category='success')
-    #     answers = Answer.query.filter_by(question_id=q_id)
-    
-    # return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
+@app.route('/upvoteAnswer', methods=["GET"])
+def upvote_answer():
+    if request.method=='GET':
+        q_title = request.args.get('question')
+        a_id = request.args.get('answer')
+        print('The value of a_id is: ' + a_id)
+        answer = Answer.query.filter_by(id=a_id).first()
 
+        if answer:
+            setattr(answer, "upvotes", answer.upvotes + 1)
+            db.session.commit()
+        else:
+            print('No question given')
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
+
+@app.route('/downvoteAnswer', methods=["GET"])
+def downvote_answer():
+    if request.method=='GET':
+        q_title = request.args.get('question')
+        a_id = request.args.get('answer')
+        print('The value of a_id is: ' + a_id)
+        answer = Answer.query.filter_by(id=a_id).first()
+
+        if answer:
+            setattr(answer, "downvotes", answer.downvotes + 1)
+            db.session.commit()
+        else:
+            print('No question given')
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
