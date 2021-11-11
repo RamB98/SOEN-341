@@ -2,8 +2,9 @@ from flask import render_template, url_for, flash, redirect, request, abort
 import flask_login
 from flask_wtf import form
 from flask_login import login_user, logout_user, login_required
+from sqlalchemy.sql.functions import current_user
 from . import app
-from app.models import Answer, Question, User
+from app.models import Answer, Question, User, VotesAnswer, VotesQuestion
 from app.forms import AnswerForm, RegisterForm, LoginForm, PostForm
 from app import db
 from datetime import datetime
@@ -72,19 +73,6 @@ def post():
             flash(f'User Creation Error: {err_msg}', category='danger')
     return render_template('post.html', form=form)
 
-    # if request.method=="POST":
-    #    #value = random.randint(1,30000)
-
-    #    respons= request.form["nm"]
-    #    guest=flask_login.current_user
-    #    input1= Question(username=guest.username, question=respons)
-    #    db.session.add(input1)
-    #    db.session.commit()
-    #    return redirect(url_for('post'))
-
-    # else: question=Question.query.all()
-
-
 @app.route("/logout")
 def logout_page():
     logout_user()
@@ -137,56 +125,134 @@ def viewquestion_page():
 def upvote_question():
     if request.method=='GET':
         q_title = request.args.get('question')
-        print('The value of q_title is: ' + q_title)
-        question = Question.query.filter_by(title=q_title).first()
-
-        if question:
-            setattr(question, "upvotes", question.upvotes + 1)
-            db.session.commit()
+        loggedIn = flask_login.current_user
+        if loggedIn.is_authenticated:
+            print('The value of q_title is: ' + q_title)
+            question = Question.query.filter_by(title=q_title).first()
+            if question:
+                votes = VotesQuestion.query.filter_by(questionID=question.id, user=loggedIn.username).first()
+                if not votes:
+                    newVote = VotesQuestion(questionID=question.id, user=loggedIn.username, vote=1)
+                    setattr(question, "upvotes", question.upvotes + 1)
+                    db.session.add(newVote)
+                    flash(
+                        f'Question upvoted: success!', category='success')
+                elif votes:
+                    count = votes.vote
+                    print("There is one vote for the user and its value is ", count)
+                    if count == 0:
+                        setattr(votes, "vote", 1)
+                        setattr(question, "upvotes", question.upvotes + 1)
+                        flash(
+                            f'Question upovted: success!', category='success')
+                    elif count == 1:
+                        setattr(votes, "vote", 0)
+                        setattr(question, "upvotes", question.upvotes - 1)
+                        flash(
+                            f'Upvote cancelled: success!', category='success')
+                    elif count == -1:
+                        setattr(votes, "vote", 1)
+                        setattr(question, "upvotes", question.upvotes + 1)
+                        setattr(question, "downvotes", question.downvotes - 1)
+                        flash(
+                            f'Switched from downvote to upvote: success!', category='success')
+                db.session.commit()
+            else:
+                print('No question given')
         else:
-            print('No question given')
+            flash(
+                f'You need to be logged in to vote on questions or answers', category='danger')
     return redirect(url_for('viewquestion_page') + '?question=' + q_title)
 
 @app.route('/downvoteQuestion', methods=["GET"])
 def downvote_question():
     if request.method=='GET':
         q_title = request.args.get('question')
-        print('The value of q_title is: ' + q_title)
-        question = Question.query.filter_by(title=q_title).first()
-
-        if question:
-            setattr(question, "downvotes", question.downvotes + 1)
-            db.session.commit()
+        loggedIn = flask_login.current_user
+        if loggedIn.is_authenticated:
+            print('The value of q_title is: ' + q_title)
+            question = Question.query.filter_by(title=q_title).first()
+            if question:
+                votes = VotesQuestion.query.filter_by(questionID=question.id, user=loggedIn.username).first()
+                if not votes:
+                    newVote = VotesQuestion(questionID=question.id, user=loggedIn.username, vote=-1)
+                    setattr(question, "downvotes", question.downvotes + 1)
+                    db.session.add(newVote)
+                    flash(
+                        f'Question downvoted: success!', category='success')
+                elif votes:
+                    count = votes.vote
+                    print("There is one vote for the user and its value is ", count)
+                    if count == 0:
+                        setattr(votes, "vote", -1)
+                        setattr(question, "downvotes", question.downvotes + 1)
+                        flash(
+                            f'Question downvoted: success!', category='success')
+                    elif count == 1:
+                        setattr(votes, "vote", -1)
+                        setattr(question, "upvotes", question.upvotes - 1)
+                        setattr(question, "downvotes", question.downvotes + 1)
+                        flash(
+                            f'Switched from upvote to downvote: success!', category='success')
+                    elif count == -1:
+                        setattr(votes, "vote", 0)
+                        setattr(question, "downvotes", question.downvotes - 1)
+                        flash(
+                            f'Downvote cancelled: success!', category='success')
+                db.session.commit()
+            else:
+                print('No question given')
         else:
-            print('No question given')
+            flash(
+                f'You need to be logged in to vote on questions or answers', category='danger')
     return redirect(url_for('viewquestion_page') + '?question=' + q_title)
 
 @app.route('/upvoteAnswer', methods=["GET"])
 def upvote_answer():
     if request.method=='GET':
         q_title = request.args.get('question')
-        a_id = request.args.get('answer')
-        print('The value of a_id is: ' + a_id)
-        answer = Answer.query.filter_by(id=a_id).first()
-
-        if answer:
-            setattr(answer, "upvotes", answer.upvotes + 1)
-            db.session.commit()
+        loggedIn = flask_login.current_user
+        if loggedIn.is_authenticated:
+            a_id = request.args.get('answer')
+            print('The value of a_id is: ' + a_id)
+            answer = Answer.query.filter_by(id=a_id).first()
+            if answer:
+                votes = VotesAnswer.query.filter_by(answerID=answer.id, user=loggedIn.username)
+                if votes.count() == 0:
+                    newVote = VotesAnswer(answerID=answer.id, user=loggedIn.username, vote=1)
+                    setattr(answer, "upvotes", answer.upvotes + 1)
+                    db.session.add(newVote)
+                    db.session.commit()
+                    flash(
+                        f'Answer upvoted: success!', category='success')
+            else:
+                print('No question given')
         else:
-            print('No question given')
+            flash(
+                f'You need to be logged in to vote on questions or answers', category='danger')
     return redirect(url_for('viewquestion_page') + '?question=' + q_title)
 
 @app.route('/downvoteAnswer', methods=["GET"])
 def downvote_answer():
     if request.method=='GET':
         q_title = request.args.get('question')
-        a_id = request.args.get('answer')
-        print('The value of a_id is: ' + a_id)
-        answer = Answer.query.filter_by(id=a_id).first()
-
-        if answer:
-            setattr(answer, "downvotes", answer.downvotes + 1)
-            db.session.commit()
+        loggedIn = flask_login.current_user
+        if loggedIn.is_authenticated:
+            a_id = request.args.get('answer')
+            print('The value of a_id is: ' + a_id)
+            answer = Answer.query.filter_by(id=a_id).first()
+            if answer:
+                votes = VotesAnswer.query.filter_by(answerID=answer.id, user=loggedIn.username)
+                if votes.count() == 0:
+                    newVote = VotesAnswer(answerID=answer.id, user=loggedIn.username, vote=-1)
+                    setattr(answer, "downvotes", answer.downvotes + 1)
+                    db.session.add(newVote)
+                    db.session.commit()
+                    flash(
+                        f'Answer downvoted: success!', category='success')
+            else:
+                print('No question given')
         else:
-            print('No question given')
+            flash(
+                f'You need to be logged in to vote on questions or answers', category='danger')
     return redirect(url_for('viewquestion_page') + '?question=' + q_title)
