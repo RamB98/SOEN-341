@@ -217,14 +217,33 @@ def upvote_answer():
             print('The value of a_id is: ' + a_id)
             answer = Answer.query.filter_by(id=a_id).first()
             if answer:
-                votes = VotesAnswer.query.filter_by(answerID=answer.id, user=loggedIn.username)
-                if votes.count() == 0:
+                votes = VotesAnswer.query.filter_by(answerID=answer.id, user=loggedIn.username).first()
+                if not votes:
                     newVote = VotesAnswer(answerID=answer.id, user=loggedIn.username, vote=1)
                     setattr(answer, "upvotes", answer.upvotes + 1)
                     db.session.add(newVote)
-                    db.session.commit()
                     flash(
                         f'Answer upvoted: success!', category='success')
+                elif votes:
+                    count = votes.vote
+                    print("There is one vote for the user and its value is ", count)
+                    if count == 0:
+                        setattr(votes, "vote", 1)
+                        setattr(answer, "upvotes", answer.upvotes + 1)
+                        flash(
+                            f'Answer upovted: success!', category='success')
+                    elif count == 1:
+                        setattr(votes, "vote", 0)
+                        setattr(answer, "upvotes", answer.upvotes - 1)
+                        flash(
+                            f'Upvote cancelled: success!', category='success')
+                    elif count == -1:
+                        setattr(votes, "vote", 1)
+                        setattr(answer, "upvotes", answer.upvotes + 1)
+                        setattr(answer, "downvotes", answer.downvotes - 1)
+                        flash(
+                            f'Switched from downvote to upvote: success!', category='success')
+                db.session.commit()
             else:
                 print('No question given')
         else:
@@ -242,14 +261,33 @@ def downvote_answer():
             print('The value of a_id is: ' + a_id)
             answer = Answer.query.filter_by(id=a_id).first()
             if answer:
-                votes = VotesAnswer.query.filter_by(answerID=answer.id, user=loggedIn.username)
-                if votes.count() == 0:
+                votes = VotesAnswer.query.filter_by(answerID=answer.id, user=loggedIn.username).first()
+                if not votes:
                     newVote = VotesAnswer(answerID=answer.id, user=loggedIn.username, vote=-1)
                     setattr(answer, "downvotes", answer.downvotes + 1)
                     db.session.add(newVote)
-                    db.session.commit()
                     flash(
                         f'Answer downvoted: success!', category='success')
+                elif votes:
+                    count = votes.vote
+                    print("There is one vote for the user and its value is ", count)
+                    if count == 0:
+                        setattr(votes, "vote", -1)
+                        setattr(answer, "downvotes", answer.downvotes + 1)
+                        flash(
+                            f'Answer downvoted: success!', category='success')
+                    elif count == 1:
+                        setattr(votes, "vote", -1)
+                        setattr(answer, "upvotes", answer.upvotes - 1)
+                        setattr(answer, "downvotes", answer.downvotes + 1)
+                        flash(
+                            f'Switched from upvote to downvote: success!', category='success')
+                    elif count == -1:
+                        setattr(votes, "vote", 0)
+                        setattr(answer, "downvotes", answer.downvotes - 1)
+                        flash(
+                            f'Downvote cancelled: success!', category='success')
+                db.session.commit()
             else:
                 print('No question given')
         else:
