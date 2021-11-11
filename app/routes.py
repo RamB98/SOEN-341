@@ -102,6 +102,14 @@ def forum_page():
 def viewquestion_page():
     form = AnswerForm()
     argcount = 0
+    if request.method == 'POST':
+        quesTitle=request.form['qtitle']
+        quest=request.form['quest']
+        bestans=request.form['bestans']
+        admin = Question.query.filter_by(id=quest).first()
+        admin.bestID = bestans
+        db.session.commit()
+        return redirect(url_for('viewquestion_page') + '?question=' +quesTitle)
     if request.method == 'GET':
         qTitle = request.args.get('question')
         ans = request.args.get('answer')

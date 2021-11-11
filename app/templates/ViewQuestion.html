@@ -97,10 +97,31 @@
 				
 				<a class="text" style="margin-left: 0px">Response by {{ a.username }} on {{a.answerdate}}</a>
 				<br>
-
+                
 				<a class="text" style="margin-left: 120px">{{ a.answer }}</a>
+
+				{% if question.bestID == a.id  %}
+                <p>this is the best answer ✓ </p>
+
+				{% elif question.username== current_user.username  %}
+				<form action="#" method="post">
+					<input type="hidden" name= "quest" value="{{question.id}}">
+					<input type="hidden" name="bestans" value="{{a.id}}">
+					<input type="hidden" name="qtitle" value="{{question.title}}">
+					<input type="submit" value="best answer">
+
+				</form>
+				
+				
+				
+				
+				
+				{%endif%}
 			
 			</p>
+			
+			
+			
 		</div>
 	
 		{% endfor %}
