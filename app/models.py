@@ -1,8 +1,13 @@
+from enum import unique
+from operator import countOf
 from flask.helpers import flash
+from sqlalchemy.sql.expression import null
 from app import db, bcrypt, login_manager
 from flask_login import UserMixin
 import sqlite3
 from sqlite3 import Error
+import sqlalchemy.types as types
+from sqlalchemy import func
 
 
 @login_manager.user_loader
@@ -29,10 +34,6 @@ class User(db.Model, UserMixin):
 
     def check_correct_password(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
-    
-#class Post(db.Model):
-#    id = db.Column(db.Integer(), primary_key=True)
-#    owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,7 +43,8 @@ class Question(db.Model):
     questionaskdate = db.Column(db.String(158), unique=False, nullable=False)
     upvotes = db.Column(db.Integer, nullable=False)
     downvotes = db.Column(db.Integer, nullable=False)
-    bestID= db.Column(db.Integer)
+    bestID = db.Column(db.Integer)
+
     def __repr__(self):
         return f'{self.question},\n\n asked by: {self.username} on {self.questionaskdate}'
 
@@ -60,3 +62,15 @@ class Answer(db.Model):
 
     def __iter__(self):
         self.num = 1
+
+class VotesQuestion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    questionID = db.Column(db.Integer, unique=False, nullable=False)
+    user = db.Column(db.String(80), unique=False, nullable=False)
+    vote = db.Column(db.Integer, unique=False, nullable=False)
+
+class VotesAnswer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    answerID = db.Column(db.Integer, unique=False, nullable=False)
+    user = db.Column(db.String(80), unique=False, nullable=False)
+    vote = db.Column(db.Integer, unique=False, nullable=False)
