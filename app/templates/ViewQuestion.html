@@ -10,10 +10,10 @@
 	<br>
 	
 	<h2 style="margin-left: 10px">{{ question.title }}</h2>
-	
-	<h5 class="text" style="margin-left: 30px">{{ question.question }}</h5>
 
-	<p style="margin-left: 300px">Asked by {{question.username}} on {{ question.questionaskdate}}</p>
+	<h6 style="margin-left: 10px">Asked by {{question.username}} on {{ question.questionaskdate}}<br>Viewed {{question.viewCount}} times</h6>
+	
+	<p class="text" style="margin-left: 30px">{{ question.question }}</p>
 
 	<style>
 		.upvotequestion {
@@ -152,9 +152,9 @@
 			padding-left: 20px;
 		}
 	</style>
-<form method="GET" class="form-answer">
+<form method="GET" class="form-answer" action="/postAnswer">
 	<h2 style="margin-left: 10px">Have something you would like to add?</h2>
-	<input type="hidden" name="question" value="{{ question.title }}" />
+	<input type="hidden" name="question" value="{{ question.title }}">
 	<dl>
 		<dt style="margin-left: 100px"> {{ form.answer.label() }}
 		<dd><div class="centerstuff">{{ form.answer(cols="90", rows="10", placeholder="New Answer") }} </div>

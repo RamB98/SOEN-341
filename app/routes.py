@@ -1,3 +1,4 @@
+from operator import methodcaller
 from flask import render_template, url_for, flash, redirect, request, abort
 import flask_login
 from flask_wtf import form
@@ -62,7 +63,7 @@ def post():
         new_question = Question(
             title=form.title.data, question=form.question.data, 
             username=loggedin.username, questionaskdate=current_dateandtime,
-            upvotes=0, downvotes=0)
+            upvotes=0, downvotes=0, viewCount=0)
         db.session.add(new_question)
         db.session.commit()
         flash(
@@ -72,6 +73,22 @@ def post():
         for err_msg in form.errors.values():
             flash(f'User Creation Error: {err_msg}', category='danger')
     return render_template('post.html', form=form)
+
+@app.route("/postAnswer", methods=["GET"])
+@login_required
+def postAnswer():
+    qTitle = request.args.get('question')
+    ans = request.args.get('answer')
+    question = Question.query.filter_by(title=qTitle).first()
+    q_id = question.id
+    loggedin = flask_login.current_user
+    now = datetime.now()
+    current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
+    new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime, upvotes=0, downvotes=0)
+    db.session.add(new_answer)
+    db.session.commit()
+    flash(f'Success! Your answer has been posted!', category='success')
+    return redirect(url_for('viewquestion_page') + '?question=' + qTitle + '&viewed=true')
 
 @app.route("/logout")
 def logout_page():
@@ -102,8 +119,6 @@ def account_page():
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
-    form = AnswerForm()
-    argcount = 0
     if request.method == 'POST':
         quesTitle=request.form['qtitle']
         quest=request.form['quest']
@@ -111,29 +126,26 @@ def viewquestion_page():
         admin = Question.query.filter_by(id=quest).first()
         admin.bestID = bestans
         db.session.commit()
-        return redirect(url_for('viewquestion_page') + '?question=' +quesTitle)
+        return redirect(url_for('viewquestion_page') + '?question=' + quesTitle)
     if request.method == 'GET':
         qTitle = request.args.get('question')
-        ans = request.args.get('answer')
-        if qTitle:
-            argcount = 1
-        if ans:
-            argcount = 2
+        countIncremented = request.args.get('viewed')
+        if not countIncremented:
+            return redirect(url_for('incrementViewCount') + '?question=' + qTitle)
         question = Question.query.filter_by(title=qTitle).first()
         q_id = question.id
-    if argcount==1:
         answers = Answer.query.filter_by(question_id=q_id)
-        return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
-    if argcount==2:
-        loggedin = flask_login.current_user
-        now = datetime.now()
-        current_dateandtime = now.strftime("%d/%m/%Y at %H:%M:%S")
-        new_answer = Answer(answer=ans, question_id=q_id, username=loggedin.username, answerdate=current_dateandtime, upvotes=0, downvotes=0)
-        db.session.add(new_answer)
-        db.session.commit()
-        flash(f'Success! Your answer has been posted!', category='success')
-        answers = Answer.query.filter_by(question_id=q_id)
-        return render_template('ViewQuestion.html', form=form, question=question, answers=answers)
+        request.method = 'refresh'
+        return render_template('ViewQuestion.html', form=AnswerForm(), question=question, answers=answers)
+
+@app.route('/incrementViewCount', methods=['GET'])
+def incrementViewCount():
+    qTitle = request.args.get('question')
+    question = Question.query.filter_by(title=qTitle).first()
+    setattr(question, "viewCount", question.viewCount + 1)
+    db.session.commit()
+    print("View count has been incremented")
+    return redirect(url_for('viewquestion_page') + '?question=' + qTitle + '&viewed=true')
 
 @app.route('/upvoteQuestion', methods=["GET"])
 def upvote_question():
@@ -176,7 +188,7 @@ def upvote_question():
         else:
             flash(
                 f'You need to be logged in to vote on questions or answers', category='danger')
-    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title + '&viewed=true')
 
 @app.route('/downvoteQuestion', methods=["GET"])
 def downvote_question():
@@ -219,7 +231,7 @@ def downvote_question():
         else:
             flash(
                 f'You need to be logged in to vote on questions or answers', category='danger')
-    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title + '&viewed=true')
 
 @app.route('/upvoteAnswer', methods=["GET"])
 def upvote_answer():
@@ -263,7 +275,7 @@ def upvote_answer():
         else:
             flash(
                 f'You need to be logged in to vote on questions or answers', category='danger')
-    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title + '&viewed=true')
 
 @app.route('/downvoteAnswer', methods=["GET"])
 def downvote_answer():
@@ -307,5 +319,4 @@ def downvote_answer():
         else:
             flash(
                 f'You need to be logged in to vote on questions or answers', category='danger')
-    return redirect(url_for('viewquestion_page') + '?question=' + q_title)
-
+    return redirect(url_for('viewquestion_page') + '?question=' + q_title + '&viewed=true')
