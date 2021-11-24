@@ -86,6 +86,20 @@ def forum_page():
     return render_template('Forum.html', questions=q)
 
 
+@app.route('/account', methods=["GET"])
+def account_page():
+    if request.method=='GET':
+        loggedIn = flask_login.current_user
+        allq = Question.query.all()
+        if loggedIn.is_authenticated:
+            # q = Question.query.all()
+            q = Question.query.filter_by(username=loggedIn.username)
+            a = Answer.query.filter_by(username=loggedIn.username)
+        else:
+            flash(
+                f'You need to be logged in to vote on questions or answers', category='danger')
+    return render_template('Account.html', questions=q, answers=a, allquestions=allq)
+
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
     form = AnswerForm()
@@ -294,3 +308,4 @@ def downvote_answer():
             flash(
                 f'You need to be logged in to vote on questions or answers', category='danger')
     return redirect(url_for('viewquestion_page') + '?question=' + q_title)
+
