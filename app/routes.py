@@ -85,20 +85,20 @@ def forum_page():
     q = Question.query.all()
     return render_template('Forum.html', questions=q)
 
-
 @app.route('/account', methods=["GET"])
+@login_required
 def account_page():
-    if request.method=='GET':
-        loggedIn = flask_login.current_user
-        allq = Question.query.all()
-        if loggedIn.is_authenticated:
-            # q = Question.query.all()
-            q = Question.query.filter_by(username=loggedIn.username)
-            a = Answer.query.filter_by(username=loggedIn.username)
-        else:
-            flash(
-                f'You need to be logged in to vote on questions or answers', category='danger')
-    return render_template('Account.html', questions=q, answers=a, allquestions=allq)
+    loggedIn = flask_login.current_user
+    allq = Question.query.all()
+    print("Dummy print")
+    if loggedIn.is_authenticated:
+        # q = Question.query.all()
+        q = Question.query.filter_by(username=loggedIn.username)
+        a = Answer.query.filter_by(username=loggedIn.username)
+        return render_template('Account.html', questions=q, answers=a, allquestions=allq)
+    else:
+        flash(
+            f'You need to be logged in to vote on questions or answers', category='danger')
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
