@@ -43,6 +43,7 @@ class Question(db.Model):
     questionaskdate = db.Column(db.String(158), unique=False, nullable=False)
     upvotes = db.Column(db.Integer, nullable=False)
     downvotes = db.Column(db.Integer, nullable=False)
+    viewCount = db.Column(db.Integer, nullable=False)
     bestID = db.Column(db.Integer)
 
     def __repr__(self):
