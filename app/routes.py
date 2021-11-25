@@ -107,12 +107,30 @@ def forum_page():
 def account_page():
     loggedIn = flask_login.current_user
     allq = Question.query.all()
-    print("Dummy print")
     if loggedIn.is_authenticated:
-        # q = Question.query.all()
+        currentUser = User.query.filter_by(username=loggedIn.username)
         q = Question.query.filter_by(username=loggedIn.username)
         a = Answer.query.filter_by(username=loggedIn.username)
-        return render_template('Account.html', questions=q, answers=a, allquestions=allq)
+
+        # question upvote count for the user:
+        vqP = VotesQuestion.query.filter_by(user=loggedIn.username, vote="1")
+        vqPcount = vqP.count()
+
+        # question downvote count for the user:
+        vqN = VotesQuestion.query.filter_by(user=loggedIn.username, vote="-1")
+        vqNcount = vqN.count()
+
+        # answer upvote count for the user:
+        vaP = VotesAnswer.query.filter_by(user=loggedIn.username, vote="1")
+        vaPcount = vaP.count()
+
+        # answer downvote count for the user:
+        vaN = VotesAnswer.query.filter_by(user=loggedIn.username, vote="-1")
+        vaNcount = vaN.count()
+
+        return render_template('Account.html', questions=q, answers=a, allquestions=allq, 
+        currentuser=currentUser, upVQC=vqPcount, downVQC=vqNcount, upVAC=vaPcount, downVAC=vaNcount
+        )
     else:
         flash(
             f'You need to be logged in to vote on questions or answers', category='danger')
