@@ -19,7 +19,7 @@ As a academics user, I want to be able to see reliable responses to a question w
 As a forum user, I want to be able to identify myself and other users with credentials, allowing me and others to save our preferences and share our opinions.<br/>
 
 <h2>Architecture</h2>
-<img src="Architecture.png" raw=true style="text-align: center" >
+<img src="Architecture.png" raw=true >
 
 <h2>Team Members (& Github Names)</h2>
 
