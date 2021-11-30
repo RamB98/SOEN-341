@@ -17,7 +17,9 @@ As a web user, I want to be able to vote on answers to contribute to popular and
 As a academics user, I want to be able to see reliable responses to a question without having to look at all of them.<br/>
 <h3>Special feature: Having user profiles</h3>
 As a forum user, I want to be able to identify myself and other users with credentials, allowing me and others to save our preferences and share our opinions.<br/>
-<h2>Project</h2>
+
+<h2>Architecture</h2>
+<img src="Architecture.png" raw=true />
 
 <h2>Team Members (& Github Names)</h2>
 
