@@ -17,22 +17,22 @@
 	{% if question.username == current_user.username %}
 		<form action="/deleteQuestion" method="GET">
 			<input type="hidden" name="question" value="{{question.id}}">
-			<input type="submit" value="Delete Question" style="margin-left: 4px; margin-bottom: 12px; background-color: red;">
+			<input type="submit" value="Delete Question" style="margin-left: 10px; margin-bottom: 12px; background-color: red;">
 		</form>
 	{%else%}
 		<form action="/bookmark" method="GET">
 			<input type="hidden" name="question" value="{{question.id}}">
 			{% if bookmark %}
-				<input type="submit" value="Remove bookmark" style="margin-left: 4px; margin-bottom: 12px">
+				<input type="submit" value="Remove bookmark" style="margin-left: 10px; margin-bottom: 12px">
 			{% else %}
-				<input type="submit" value="Bookmark question" style="margin-left: 4px; margin-bottom: 12px">
+				<input type="submit" value="Bookmark question" style="margin-left: 10px; margin-bottom: 12px">
 			{% endif %}
 		</form>
 	{%endif%}
 
 	<style>
 		.upvotequestion {
-			margin-left: 4px;
+			margin-left: 10px;
   			width: 10%;
   			padding: 10px;
   			background-color: #04AA6D;
@@ -41,7 +41,7 @@
 
 		}
 		.downvotequestion {
-			margin-left: 4px;
+			margin-left: 10px;
   			width:10%;
   			padding: 10px;
   			background-color: red;
@@ -49,7 +49,7 @@
   			font-size: 15px;
 		}
 		.upvoteanswer {
-			margin-left: 4px;
+			margin-left: 10px;
 			width: 5%;
   			padding: 5px;
   			background-color: #04AA6D;
@@ -59,9 +59,9 @@
 			border-radius: 5px;
 		}
 		.downvoteanswer {
-			margin-left: 4px;
+			margin-left: 10px;
   			width: 5%;
-  			padding: 4px;
+  			padding: 10px;
   			background-color: red;
   			color: white;
   			font-size: 15px;
@@ -82,6 +82,17 @@
 		</form>
 	</div>
 	<br>
+
+	{% if question.bestID %}
+		{% for a in answers %}
+			{% if a.id == question.bestID %}
+				<h4 style="margin-left: 10px">Best answer: </h4>
+				<a class="text" style="margin-left: 10px">Answer by {{ a.username }} on {{a.answerdate}}</a>
+				<br>
+				<a class="text" style="margin-left: 120px">{{ a.answer }}</a>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
 
 	{% if answers %}
 
@@ -110,27 +121,26 @@
 					<input type="submit" value="&#11015 {{a.downvotes}}" class="downvoteanswer">
 				</form>
 				
-				<a class="text" style="margin-left: 4px">Response by {{ a.username }} on {{a.answerdate}}</a>
+				<a class="text" style="margin-left: 10px">Answer by {{ a.username }} on {{a.answerdate}}</a>
 				<br>
                 
 				<a class="text" style="margin-left: 120px">{{ a.answer }}</a>
 
 				{% if question.bestID == a.id  %}
-                <p style="margin-left: 4px">This is the best answer ✓ </p>
+                <p style="margin-left: 10px; color: green;">Best answer &#9989 </p>
+				{% endif %}
 
-				{% elif question.username == current_user.username  %}
-				<form action="#" method="post">
+				{% if question.username == current_user.username  %}
+				<form action="/bestAnswer" method="GET">
 					<input type="hidden" name= "quest" value="{{question.id}}">
 					<input type="hidden" name="bestans" value="{{a.id}}">
 					<input type="hidden" name="qtitle" value="{{question.title}}">
-					<input type="submit" value="best answer" style="margin-left: 4px">
-
+					{%if question.bestID == a.id  %}
+						<input type="submit" value="Un-top answer" style="margin-left: 10px">
+					{%else%}
+						<input type="submit" value="Top answer" style="margin-left: 10px">
+					{%endif%}
 				</form>
-				
-				
-				
-				
-				
 				{%endif%}
 			
 			</p>

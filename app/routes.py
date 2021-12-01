@@ -138,14 +138,6 @@ def account_page():
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
-    if request.method == 'POST':
-        quesTitle=request.form['qtitle']
-        quest=request.form['quest']
-        bestans=request.form['bestans']
-        admin = Question.query.filter_by(id=quest).first()
-        admin.bestID = bestans
-        db.session.commit()
-        return redirect(url_for('viewquestion_page') + '?question=' + quesTitle)
     if request.method == 'GET':
         qTitle = request.args.get('question')
         countIncremented = request.args.get('viewed')
@@ -377,3 +369,16 @@ def delete_question():
     flash(
         f'Question successfully deleted!', category='success')
     return redirect(url_for('home'))
+
+@app.route('/bestAnswer', methods=["GET"])
+def best_answer():
+    quesTitle=request.args.get('qtitle')
+    quest=request.args.get('quest')
+    bestans=request.args.get('bestans')
+    admin = Question.query.filter_by(id=quest).first()
+    if admin.bestID == int(bestans):
+        admin.bestID = None
+    else:
+        admin.bestID = bestans
+    db.session.commit()
+    return redirect(url_for('viewquestion_page') + '?question=' + quesTitle + "&viewed=true")
