@@ -17,8 +17,16 @@
             <h2>My Profile Information</h2>
 
             <div>
-            {% for cu in currentuser %}
+                <img src="{{ img }}" alt="User Image"> 
             <h6>Profile Pic...</h6>
+            <form  enctype="multipart/form-data" action="/upload" method="POST">
+
+                <input type="file" name="pic"/>
+                <input type="submit" value="Upload file"/>
+            
+            </form>
+            {% for cu in currentuser %}
+             
             <h6>Username: {{ cu.username }}</h6>
             <h6>Email: {{ cu.email }}</h6>
             {% endfor %}
@@ -115,8 +123,10 @@
         .centerstuff{
 			text-align: center;
 		}
+
 	</style>
-	
+
+
 
 	<br>
 

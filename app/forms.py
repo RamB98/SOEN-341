@@ -48,3 +48,4 @@ class PostForm(FlaskForm):
 class AnswerForm(FlaskForm):
     answer = TextAreaField('Enter your answer to this question here:',widget=TextArea(), validators=[DataRequired()])
     submit = SubmitField(label='Post Answer')
+
