@@ -14,6 +14,14 @@
 	<h6 style="margin-left: 10px">Asked by {{question.username}} on {{ question.questionaskdate}}<br>Viewed {{question.viewCount}} times</h6>
 	
 	<p class="text" style="margin-left: 30px">{{ question.question }}</p>
+	<form action="/bookmark" method="GET">
+		<input type="hidden" name="question" value="{{question.id}}">
+		{% if bookmark %}
+			<input type="submit" value="Remove bookmark" style="margin-left: 4px; margin-bottom: 12px">
+		{% else %}
+			<input type="submit" value="Bookmark question" style="margin-left: 4px; margin-bottom: 12px">
+		{% endif %}
+	</form>
 
 	<style>
 		.upvotequestion {
@@ -95,20 +103,20 @@
 					<input type="submit" value="&#11015 {{a.downvotes}}" class="downvoteanswer">
 				</form>
 				
-				<a class="text" style="margin-left: 0px">Response by {{ a.username }} on {{a.answerdate}}</a>
+				<a class="text" style="margin-left: 4px">Response by {{ a.username }} on {{a.answerdate}}</a>
 				<br>
                 
 				<a class="text" style="margin-left: 120px">{{ a.answer }}</a>
 
 				{% if question.bestID == a.id  %}
-                <p>this is the best answer ✓ </p>
+                <p style="margin-left: 4px">This is the best answer ✓ </p>
 
 				{% elif question.username== current_user.username  %}
 				<form action="#" method="post">
 					<input type="hidden" name= "quest" value="{{question.id}}">
 					<input type="hidden" name="bestans" value="{{a.id}}">
 					<input type="hidden" name="qtitle" value="{{question.title}}">
-					<input type="submit" value="best answer">
+					<input type="submit" value="best answer" style="margin-left: 4px">
 
 				</form>
 				

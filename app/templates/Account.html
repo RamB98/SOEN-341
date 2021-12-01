@@ -40,7 +40,6 @@
         <div class="column2">
 
             <h2> My Questions: </h2>
-            <h6>Press the question titles to view them and know if they have been answered</h6>
         
             <div>
                 {% for q in questions %}
@@ -54,13 +53,10 @@
                 {% endfor %}
         
                 <h2> My Answers: </h2>
-                <h6>Press the question link to view how many upvotes your answer received</h6>
                 {%for a in answers %}
                 <h4>
                     <a style="margin-left: 10px">{{ a.answer}}</a>
                 </h4>
-            </div>
-            <div>
                 <h6>
                     <a class="text" style="margin-left: 40px">Answer given on {{ a.answerdate}} and replying to the question: </a>
                 </h6>
@@ -79,7 +75,13 @@
 
         <!-- third column of html page -->
         <div class="column3">
-
+            <h2> My Bookmarks: </h2>
+            {% for b in bookmarks %}
+            <h4>
+                <a class="text" style="margin-left: 10px" href="{{ url_for('viewquestion_page') }}?question={{ b.title }}">{{ b.title }}</a>
+            </h4>
+            <br>
+            {% endfor %}
         </div>
     </div>
 
@@ -94,12 +96,12 @@
 
         .column2 {
             float: left;
-            width: 50%;
+            width: 35%;
         }
 
         .column3 {
             float: left;
-            width:25%;
+            width: 35%;
         }
 
         .row:after {
