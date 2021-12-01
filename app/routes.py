@@ -3,9 +3,9 @@ from flask import render_template, url_for, flash, redirect, request, abort
 import flask_login
 from flask_wtf import form
 from flask_login import login_user, logout_user, login_required
-from sqlalchemy.sql.functions import current_user
+from sqlalchemy.sql.functions import current_user, user
 from . import app
-from app.models import Answer, Question, User, VotesAnswer, VotesQuestion
+from app.models import Answer, Bookmark, Question, User, VotesAnswer, VotesQuestion
 from app.forms import AnswerForm, RegisterForm, LoginForm, PostForm
 from app import db
 from datetime import datetime
@@ -111,6 +111,7 @@ def account_page():
         currentUser = User.query.filter_by(username=loggedIn.username)
         q = Question.query.filter_by(username=loggedIn.username)
         a = Answer.query.filter_by(username=loggedIn.username)
+        b = Bookmark.query.filter_by(user=loggedIn.username)
 
         # question upvote count for the user:
         vqP = VotesQuestion.query.filter_by(user=loggedIn.username, vote="1")
@@ -129,22 +130,14 @@ def account_page():
         vaNcount = vaN.count()
 
         return render_template('Account.html', questions=q, answers=a, allquestions=allq, 
-        currentuser=currentUser, upVQC=vqPcount, downVQC=vqNcount, upVAC=vaPcount, downVAC=vaNcount
-        )
+        currentuser=currentUser, upVQC=vqPcount, downVQC=vqNcount, upVAC=vaPcount, downVAC=vaNcount,
+        bookmarks=b)
     else:
         flash(
             f'You need to be logged in to vote on questions or answers', category='danger')
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
-    if request.method == 'POST':
-        quesTitle=request.form['qtitle']
-        quest=request.form['quest']
-        bestans=request.form['bestans']
-        admin = Question.query.filter_by(id=quest).first()
-        admin.bestID = bestans
-        db.session.commit()
-        return redirect(url_for('viewquestion_page') + '?question=' + quesTitle)
     if request.method == 'GET':
         qTitle = request.args.get('question')
         countIncremented = request.args.get('viewed')
@@ -154,6 +147,11 @@ def viewquestion_page():
         q_id = question.id
         answers = Answer.query.filter_by(question_id=q_id)
         request.method = 'refresh'
+        if flask_login.current_user.is_authenticated:
+            bookmark = Bookmark.query.filter_by(question=q_id, user=flask_login.current_user.username).first()
+            if bookmark:
+                return render_template('ViewQuestion.html', form=AnswerForm(), question=question, answers=answers, bookmark=True)
+            
         return render_template('ViewQuestion.html', form=AnswerForm(), question=question, answers=answers)
 
 @app.route('/incrementViewCount', methods=['GET'])
@@ -338,3 +336,49 @@ def downvote_answer():
             flash(
                 f'You need to be logged in to vote on questions or answers', category='danger')
     return redirect(url_for('viewquestion_page') + '?question=' + q_title + '&viewed=true')
+
+@app.route('/bookmark', methods=["GET"])
+def bookmark():
+    if request.method=='GET':
+        q_id = request.args.get('question')
+        q_title = Question.query.filter_by(id=q_id).first().title
+        loggedIn = flask_login.current_user
+        if loggedIn.is_authenticated:
+            bookmark = Bookmark.query.filter_by(question=q_id, user=loggedIn.username)
+            if bookmark.first():
+                bookmark.delete()
+                flash(
+                    f'Bookmark successfully deleted!', category='success')
+            else:
+                newBookmark = Bookmark(question=q_id, user=loggedIn.username, title=q_title)
+                db.session.add(newBookmark)
+                flash(
+                    f'Successfully bookmarked the question!', category='success')
+            db.session.commit()
+        else:
+            flash(
+                f'You need to be logged in to bookmark a question', category='danger')
+    return redirect(url_for("viewquestion_page") + "?question=" + q_title + "&viewed=true")
+
+@app.route('/deleteQuestion', methods=["GET"])
+def delete_question():
+    q_id = request.args.get('question')
+    Question.query.filter_by(id=q_id).delete()
+    Bookmark.query.filter_by(question=q_id).delete()
+    db.session.commit()
+    flash(
+        f'Question successfully deleted!', category='success')
+    return redirect(url_for('home'))
+
+@app.route('/bestAnswer', methods=["GET"])
+def best_answer():
+    quesTitle=request.args.get('qtitle')
+    quest=request.args.get('quest')
+    bestans=request.args.get('bestans')
+    admin = Question.query.filter_by(id=quest).first()
+    if admin.bestID == int(bestans):
+        admin.bestID = None
+    else:
+        admin.bestID = bestans
+    db.session.commit()
+    return redirect(url_for('viewquestion_page') + '?question=' + quesTitle + "&viewed=true")

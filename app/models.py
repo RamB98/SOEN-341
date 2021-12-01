@@ -2,6 +2,7 @@ from enum import unique
 from operator import countOf
 from flask.helpers import flash
 from sqlalchemy.sql.expression import null
+from sqlalchemy.sql.sqltypes import Integer
 from app import db, bcrypt, login_manager
 from flask_login import UserMixin
 import sqlite3
@@ -19,7 +20,6 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(60), nullable=False)
-#    posts = db.relationship('Post', backref='owned_user', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -75,3 +75,9 @@ class VotesAnswer(db.Model):
     answerID = db.Column(db.Integer, unique=False, nullable=False)
     user = db.Column(db.String(80), unique=False, nullable=False)
     vote = db.Column(db.Integer, unique=False, nullable=False)
+
+class Bookmark(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.Integer, unique=False, nullable=False)
+    user = db.Column(db.String, unique=False, nullable=False)
+    title = title = db.Column(db.String(102), unique=False, nullable=False)
