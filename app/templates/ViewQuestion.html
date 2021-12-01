@@ -14,14 +14,21 @@
 	<h6 style="margin-left: 10px">Asked by {{question.username}} on {{ question.questionaskdate}}<br>Viewed {{question.viewCount}} times</h6>
 	
 	<p class="text" style="margin-left: 30px">{{ question.question }}</p>
-	<form action="/bookmark" method="GET">
-		<input type="hidden" name="question" value="{{question.id}}">
-		{% if bookmark %}
-			<input type="submit" value="Remove bookmark" style="margin-left: 4px; margin-bottom: 12px">
-		{% else %}
-			<input type="submit" value="Bookmark question" style="margin-left: 4px; margin-bottom: 12px">
-		{% endif %}
-	</form>
+	{% if question.username == current_user.username %}
+		<form action="/deleteQuestion" method="GET">
+			<input type="hidden" name="question" value="{{question.id}}">
+			<input type="submit" value="Delete Question" style="margin-left: 4px; margin-bottom: 12px; background-color: red;">
+		</form>
+	{%else%}
+		<form action="/bookmark" method="GET">
+			<input type="hidden" name="question" value="{{question.id}}">
+			{% if bookmark %}
+				<input type="submit" value="Remove bookmark" style="margin-left: 4px; margin-bottom: 12px">
+			{% else %}
+				<input type="submit" value="Bookmark question" style="margin-left: 4px; margin-bottom: 12px">
+			{% endif %}
+		</form>
+	{%endif%}
 
 	<style>
 		.upvotequestion {
@@ -111,7 +118,7 @@
 				{% if question.bestID == a.id  %}
                 <p style="margin-left: 4px">This is the best answer ✓ </p>
 
-				{% elif question.username== current_user.username  %}
+				{% elif question.username == current_user.username  %}
 				<form action="#" method="post">
 					<input type="hidden" name= "quest" value="{{question.id}}">
 					<input type="hidden" name="bestans" value="{{a.id}}">

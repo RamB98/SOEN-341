@@ -367,4 +367,13 @@ def bookmark():
             flash(
                 f'You need to be logged in to bookmark a question', category='danger')
     return redirect(url_for("viewquestion_page") + "?question=" + q_title + "&viewed=true")
-        
+
+@app.route('/deleteQuestion', methods=["GET"])
+def delete_question():
+    q_id = request.args.get('question')
+    Question.query.filter_by(id=q_id).delete()
+    Bookmark.query.filter_by(question=q_id).delete()
+    db.session.commit()
+    flash(
+        f'Question successfully deleted!', category='success')
+    return redirect(url_for('home'))
