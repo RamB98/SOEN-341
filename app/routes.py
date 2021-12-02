@@ -141,9 +141,14 @@ def viewquestion_page():
         quesTitle=request.form['qtitle']
         quest=request.form['quest']
         bestans=request.form['bestans']
-        admin = Question.query.filter_by(id=quest).first()
-        admin.bestID = bestans
-        db.session.commit()
+        if bestans=='negative':
+            admin = Question.query.filter_by(id=quest).first()
+            admin.bestID = -1
+            db.session.commit()
+        else :
+            admin = Question.query.filter_by(id=quest).first()
+            admin.bestID = bestans
+            db.session.commit()
         return redirect(url_for('viewquestion_page') + '?question=' + quesTitle)
     if request.method == 'GET':
         qTitle = request.args.get('question')
