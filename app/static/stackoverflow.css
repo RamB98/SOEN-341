@@ -255,11 +255,10 @@
     background-position: 10% 90%;
   }
 
-  .default-image-slide {
-    background-image: url("images/DefaultProfile.png");
-    width: 60px;
-    height: 60px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 10% 90%;
+  .profile-pic {
+    width: auto;
+    height: auto;
+    max-width: 50%;
+    max-height: 50%;
+    margin-bottom: 12px;
   }

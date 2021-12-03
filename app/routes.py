@@ -1,5 +1,6 @@
 from operator import methodcaller
 from flask import Flask, render_template, url_for, flash, redirect, request, Response, abort
+from flask.helpers import safe_join
 from werkzeug.datastructures import ResponseCacheControl
 import flask_login
 from flask_wtf import form
@@ -43,7 +44,7 @@ def register_page():
     if form.validate_on_submit():
         new_user = User(username=form.username.data,
                         email=form.email.data, password=form.password1.data, 
-                        img="null", name="null", mimetype="null")
+                        img="DefaultProfile.png")
         db.session.add(new_user)
         db.session.commit()
         flash(
@@ -111,7 +112,6 @@ def account_page():
     loggedIn = flask_login.current_user
     allq = Question.query.all()
     if loggedIn.is_authenticated:
-        currentUser = User.query.filter_by(username=loggedIn.username)
         q = Question.query.filter_by(username=loggedIn.username)
         a = Answer.query.filter_by(username=loggedIn.username)
         b = Bookmark.query.filter_by(user=loggedIn.username)
@@ -132,14 +132,11 @@ def account_page():
         vaN = VotesAnswer.query.filter_by(user=loggedIn.username, vote="-1")
         vaNcount = vaN.count()
 
-        response = Response(loggedIn.img, mimetype=loggedIn.mimetype)
-
         return render_template('Account.html', questions=q, answers=a, allquestions=allq, 
-        currentuser=currentUser, upVQC=vqPcount, downVQC=vqNcount, upVAC=vaPcount, downVAC=vaNcount,
-        bookmarks=b, img=response)
+        upVQC=vqPcount, downVQC=vqNcount, upVAC=vaPcount, downVAC=vaNcount,
+        bookmarks=b, img=loggedIn.img)
     else:
-        flash(
-            f'You need to be logged in to vote on questions or answers', category='danger')
+        redirect(url_for('login_page'))
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
@@ -388,36 +385,16 @@ def best_answer():
     db.session.commit()
     return redirect(url_for('viewquestion_page') + '?question=' + quesTitle + "&viewed=true")
 
-
-
 @app.route('/upload', methods=["POST"])
 def upload_page():
     loggedin = flask_login.current_user
-    current_user=User.query.filter_by(username=loggedin.username).first()
     pic = request.files['pic']
     if not pic:
         flash(f'No file uploaded', category='danger')
     else:
-        filename = secure_filename(pic.filename)
-        mimetype = pic.mimetype
-        # img = Img(img=pic.read(), mimetype=mimetype, name=filename, username=loggedin.username)
-        setattr(current_user, "img", pic.read())
-        setattr(current_user, "mimetype", mimetype)
-        setattr(current_user, "name", filename)
-        print(pic.read())
-        db.session.commit()
+        if loggedin.img == "DefaultProfile.png":
+            setattr(loggedin, "img", loggedin.username + "Pic")
+            db.session.commit()
+        pic.save(safe_join('app/static/images/profilePics', loggedin.username + "Pic"))
         flash(f'Image uploaded to db', category='success')
-    return render_template('Account.html')
-
-@app.route('/<int:image>')
-def get_image(image):
-
-    loggedin = flask_login.current_user
-    current_user=User.query.filter_by(username=loggedin.username).first()
-    if not loggedin:
-        return 'No image with that id', 404
-    return Response(loggedin.img, mimetype=loggedin.mimetype)
-
-# @app.route('upload/<filename>')
-# def send_image(filename):
-#     return send_from_directory("")
+    return redirect(url_for('account_page'))
