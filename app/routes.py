@@ -109,34 +109,42 @@ def forum_page():
 @app.route('/account', methods=["GET"])
 @login_required
 def account_page():
+    username = request.args.get('user')
+    print("This is the username: " + username)
     loggedIn = flask_login.current_user
     allq = Question.query.all()
-    if loggedIn.is_authenticated:
-        q = Question.query.filter_by(username=loggedIn.username)
-        a = Answer.query.filter_by(username=loggedIn.username)
-        b = Bookmark.query.filter_by(user=loggedIn.username)
-
-        # question upvote count for the user:
-        vqP = VotesQuestion.query.filter_by(user=loggedIn.username, vote="1")
-        vqPcount = vqP.count()
-
-        # question downvote count for the user:
-        vqN = VotesQuestion.query.filter_by(user=loggedIn.username, vote="-1")
-        vqNcount = vqN.count()
-
-        # answer upvote count for the user:
-        vaP = VotesAnswer.query.filter_by(user=loggedIn.username, vote="1")
-        vaPcount = vaP.count()
-
-        # answer downvote count for the user:
-        vaN = VotesAnswer.query.filter_by(user=loggedIn.username, vote="-1")
-        vaNcount = vaN.count()
-
-        return render_template('Account.html', questions=q, answers=a, allquestions=allq, 
-        upVQC=vqPcount, downVQC=vqNcount, upVAC=vaPcount, downVAC=vaNcount,
-        bookmarks=b, img=loggedIn.img)
-    else:
+    user = None
+    if not username:
         redirect(url_for('login_page'))
+    elif username == loggedIn.username:
+            user = loggedIn
+    else:
+        user = User.query.filter_by(username=username).first()
+
+    q = Question.query.filter_by(username=user.username)
+    a = Answer.query.filter_by(username=user.username)
+    b = Bookmark.query.filter_by(user=user.username)
+
+    # question upvote count for the user:
+    vqP = VotesQuestion.query.filter_by(user=user.username, vote="1")
+    vqPcount = vqP.count()
+
+    # question downvote count for the user:
+    vqN = VotesQuestion.query.filter_by(user=user.username, vote="-1")
+    vqNcount = vqN.count()
+
+    # answer upvote count for the user:
+    vaP = VotesAnswer.query.filter_by(user=user.username, vote="1")
+    vaPcount = vaP.count()
+
+    # answer downvote count for the user:
+    vaN = VotesAnswer.query.filter_by(user=user.username, vote="-1")
+    vaNcount = vaN.count()
+
+    img = user.img
+    return render_template('Account.html', questions=q, answers=a, allquestions=allq, 
+        upVQC=vqPcount, downVQC=vqNcount, upVAC=vaPcount, downVAC=vaNcount,
+        bookmarks=b, img=img, user=user)
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
@@ -397,4 +405,4 @@ def upload_page():
             db.session.commit()
         pic.save(safe_join('app/static/images/profilePics', loggedin.username + "Pic"))
         flash(f'Image uploaded to db', category='success')
-    return redirect(url_for('account_page'))
+    return redirect(url_for('account_page') + "?user=" + loggedin.username)

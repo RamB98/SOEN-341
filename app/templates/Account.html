@@ -18,11 +18,13 @@
 
             <div>
                 <img src="/static/images/profilePics/{{ img }}" class="profile-pic">
-                <form  enctype="multipart/form-data" action="/upload" method="POST">
-                    <input type="file" name="pic" style="margin-bottom: 12px;"><br>
-                    <input type="submit" value="Upload file">
-                </form>
-                <br>
+                {% if user == current_user %}
+                    <form  enctype="multipart/form-data" action="/upload" method="POST">
+                        <input type="file" name="pic" style="margin-bottom: 12px;"><br>
+                        <input type="submit" value="Upload file">
+                    </form>
+                    <br>
+                {% endif %}
                 <h6>Username: {{ current_user.username }}</h6>
                 <h6>Email: {{ current_user.email }}</h6>
                 <br>
@@ -47,30 +49,30 @@
             <div>
                 {% for q in questions %}
                 <h4>
-                    <a class="text" style="margin-left: 10px" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
+                    <a class="hide-overflow" style="margin-left: 5%" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
                 </h4>
                 <h6>
-                <a class="text" style="margin-left: 40px">Asked on {{ q.questionaskdate}}</a>
+                <p class="text ignore-css" style="margin-left: 10%">Asked on {{ q.questionaskdate}}</p>
                 </h6>
                 <br>
                 {% endfor %}
         
                 <h2> My Answers: </h2>
                 {%for a in answers %}
-                <h4>
-                    <a style="margin-left: 10px">{{ a.answer}}</a>
-                </h4>
-                <h6>
-                    <a class="text" style="margin-left: 40px">Answer given on {{ a.answerdate}} and replying to the question: </a>
-                </h6>
-        
-                {%for q in allquestions %}
-                {% if q.id == a.question_id %}
-                <h6>
-                    <a class="text" style="margin-left: 100px" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
-                </h6>
-                {% endif %}
-                {% endfor %}
+                    <h4>
+                        <p class="hide-overflow" style="margin-left: 5%">{{ a.answer}}</p>
+                    </h4>
+                    <h6>
+                        <p class="ignore-css text" style="margin-left: 10%">Answer given on {{ a.answerdate}} and replying to the question: </p>
+                    </h6>
+            
+                    {%for q in allquestions %}
+                        {% if q.id == a.question_id %}
+                            <h6>
+                                <a class="text" style="margin-left: 15%" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
+                            </h6>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             </div>
 
@@ -81,7 +83,7 @@
             <h2> My Bookmarks: </h2>
             {% for b in bookmarks %}
             <h4>
-                <a class="text" style="margin-left: 10px" href="{{ url_for('viewquestion_page') }}?question={{ b.title }}">{{ b.title }}</a>
+                <a class="hide-overflow" style="margin-left: 5%" href="{{ url_for('viewquestion_page') }}?question={{ b.title }}">{{ b.title }}</a>
             </h4>
             <br>
             {% endfor %}
@@ -98,6 +100,7 @@
         }
 
         .column2 {
+            direction: ltr;
             float: left;
             width: 32.5%;
         }
@@ -113,13 +116,27 @@
         clear: both;
         }
 
-		.nolinebreak{
-            white-space: nowrap;
-            overflow: hidden;
-		}
         .centerstuff{
 			text-align: center;
 		}
+
+        .hide-overflow{
+            text-overflow: ellipsis;
+        }
+
+        p{
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        a{
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ignore-css{
+            all: unset;
+        }
 	</style>
 	
 

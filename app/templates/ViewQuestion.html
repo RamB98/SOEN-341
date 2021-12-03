@@ -9,39 +9,38 @@
     <main role="main">
 	<br>
 	
-	<h2 style="margin-left: 10px">{{ question.title }}</h2>
+	<h2 style="margin-left: 2%; overflow-wrap: break-word;">{{ question.title }}</h2>
 
-	<h6 style="margin-left: 10px">Asked by {{question.username}} on {{ question.questionaskdate}}<br>Viewed {{question.viewCount}} times</h6>
+	<h6 style="margin-left: 2%">Asked by <a href="{{ url_for('account_page') }}?user={{question.username}}">{{question.username}}</a> on {{ question.questionaskdate}}<br>Viewed {{question.viewCount}} times</h6>
 	
-	<p class="text" style="margin-left: 30px">{{ question.question }}</p>
+	<p class="text" style="margin-left: 5%; overflow-wrap: break-word;">{{ question.question }}</p>
 	{% if question.username == current_user.username %}
 		<form action="/deleteQuestion" method="GET">
 			<input type="hidden" name="question" value="{{question.id}}">
-			<input type="submit" value="Delete Question" style="margin-left: 10px; margin-bottom: 12px; background-color: red;">
+			<input type="submit" value="Delete Question" style="margin-left: 2%; margin-bottom: 12px; background-color: red;">
 		</form>
 	{%else%}
 		<form action="/bookmark" method="GET">
 			<input type="hidden" name="question" value="{{question.id}}">
 			{% if bookmark %}
-				<input type="submit" value="Remove bookmark" style="margin-left: 10px; margin-bottom: 12px">
+				<input type="submit" value="Remove bookmark" style="margin-left: 2%; margin-bottom: 12px">
 			{% else %}
-				<input type="submit" value="Bookmark question" style="margin-left: 10px; margin-bottom: 12px">
+				<input type="submit" value="Bookmark question" style="margin-left: 2%; margin-bottom: 12px">
 			{% endif %}
 		</form>
 	{%endif%}
 
 	<style>
 		.upvotequestion {
-			margin-left: 10px;
+			margin-left: 2%;
   			width: 10%;
   			padding: 10px;
   			background-color: #04AA6D;
   			color: white;
   			font-size: 15px;
-
 		}
 		.downvotequestion {
-			margin-left: 10px;
+			margin-left: 2%;
   			width:10%;
   			padding: 10px;
   			background-color: red;
@@ -49,9 +48,8 @@
   			font-size: 15px;
 		}
 		.upvoteanswer {
-			margin-left: 10px;
-			width: 5%;
-  			padding: 5px;
+  			padding-block: 5px;
+			padding-inline: 10px;
   			background-color: #04AA6D;
   			color: white;
   			font-size: 15px;
@@ -59,14 +57,30 @@
 			border-radius: 5px;
 		}
 		.downvoteanswer {
-			margin-left: 10px;
-  			width: 5%;
-  			padding: 10px;
+			padding-block: 5px;
+			padding-inline: 10px;
   			background-color: red;
   			color: white;
   			font-size: 15px;
 			text-align: center;
 			border-radius: 5px;
+			margin-bottom: 12px;
+		}
+		.answer{
+			display: flex;
+			justify-content: flex-start;
+			margin-left: 2%;
+			margin-bottom: 12px;
+			margin-right: 2%;
+		}
+		.answer-votes{
+			order: 1;
+		}
+		.answer-text{
+			order: 2;
+			flex: 20 1 auto;
+			min-width: 0;
+			flex-wrap: wrap;
 		}
 		
 	</style>
@@ -86,76 +100,67 @@
 	{% if question.bestID %}
 		{% for a in answers %}
 			{% if a.id == question.bestID %}
-				<h4 style="margin-left: 10px">Best answer: </h4>
-				<a class="text" style="margin-left: 10px">Answer by {{ a.username }} on {{a.answerdate}}</a>
-				<br>
-				<a class="text" style="margin-left: 120px">{{ a.answer }}</a>
+				<h4 style="margin-left: 2%">Best answer: </h4>
+				<p class="text" style="margin-left: 2%">Answer by <a href="{{ url_for('account_page') }}?user={{a.username}}">{{ a.username }}</a> on {{a.answerdate}}</p>
+				<p class="text" style="margin-left: 5%; overflow-wrap: break-word;">{{ a.answer }}</p>
 			{% endif %}
 		{% endfor %}
 	{% endif %}
 
 	{% if answers %}
 
-	<h4 style="margin-left: 10px">{{ answers.count() }} Answers: </h4>
+	<h4 style="margin-left: 2%">{{ answers.count() }} Answers: </h4>
 
 	{% else %}
 	
-	<h4 style="margin-left: 10px">Answers: </h4>
+	<h4 style="margin-left: 2%">Answers: </h4>
 
 	{% endif %}
 
 	{% if answers %}
 
 		{% for a in answers %}
-		<div>
-			<p>
-				
-				<form action="/upvoteAnswer" methods="GET">
-					<input type="hidden" name="question" value="{{ question.title }}">
-					<input type="hidden" name="answer" value="{{ a.id }}">
-					<input type="submit" value="&#11014 {{a.upvotes}}" class="upvoteanswer">
-				</form>
-				<form action="/downvoteAnswer" methods="GET">
-					<input type="hidden" name="question" value="{{ question.title }}">
-					<input type="hidden" name="answer" value="{{ a.id }}">
-					<input type="submit" value="&#11015 {{a.downvotes}}" class="downvoteanswer">
-				</form>
-				
-				<a class="text" style="margin-left: 10px">Answer by {{ a.username }} on {{a.answerdate}}</a>
-				<br>
-                
-				<a class="text" style="margin-left: 120px">{{ a.answer }}</a>
+		<div class="answer">
+				<div class="answer-votes">
+					<form action="/upvoteAnswer" methods="GET">
+						<input type="hidden" name="question" value="{{ question.title }}">
+						<input type="hidden" name="answer" value="{{ a.id }}">
+						<input type="submit" value="&#11014 {{a.upvotes}}" class="upvoteanswer">
+					</form>
+					<form action="/downvoteAnswer" methods="GET">
+						<input type="hidden" name="question" value="{{ question.title }}">
+						<input type="hidden" name="answer" value="{{ a.id }}">
+						<input type="submit" value="&#11015 {{a.downvotes}}" class="downvoteanswer">
+					</form>
+					{% if question.bestID == a.id  %}
+					<p style="color: green;">Best answer &#9989 </p>
+					{% endif %}
 
-				{% if question.bestID == a.id  %}
-                <p style="margin-left: 10px; color: green;">Best answer &#9989 </p>
-				{% endif %}
-
-				{% if question.username == current_user.username  %}
-				<form action="/bestAnswer" method="GET">
-					<input type="hidden" name= "quest" value="{{question.id}}">
-					<input type="hidden" name="bestans" value="{{a.id}}">
-					<input type="hidden" name="qtitle" value="{{question.title}}">
-					{%if question.bestID == a.id  %}
-						<input type="submit" value="Un-top answer" style="margin-left: 10px">
-					{%else%}
-						<input type="submit" value="Top answer" style="margin-left: 10px">
+					{% if question.username == current_user.username  %}
+					<form action="/bestAnswer" method="GET">
+						<input type="hidden" name= "quest" value="{{question.id}}">
+						<input type="hidden" name="bestans" value="{{a.id}}">
+						<input type="hidden" name="qtitle" value="{{question.title}}">
+						{%if question.bestID == a.id  %}
+							<input type="submit" value="Un-top answer">
+						{%else%}
+							<input type="submit" value="Top answer">
+						{%endif%}
+					</form>
 					{%endif%}
-				</form>
-				{%endif%}
-			
-			</p>
-			
-			
-			
+				</div>
+				<div class="answer-text">
+					<h6 class="text" style="margin-left: 2%">Answer by <a href="{{ url_for('account_page') }}?user={{a.username}}">{{ a.username }}</a> on {{a.answerdate}}</h6>
+					
+					<p class="text" style="margin-left: 5%; overflow-wrap: break-word;">{{ a.answer }}</p>
+				</div>			
 		</div>
 	
 		{% endfor %}
 
 	{% else %}
-		<p>Unfortunately, no answers have been submitted yet. Please try again later!</p>
+		<p>Unfortunately, no answers have been submitted yet. Please try again later!</p><br><br>
 	{% endif %}
-
-	<br><br>
 
 	<style>
 		.centerstuff{
@@ -178,7 +183,7 @@
 		}
 	</style>
 <form method="GET" class="form-answer" action="/postAnswer">
-	<h2 style="margin-left: 10px">Have something you would like to add?</h2>
+	<h2 style="margin-left: 2%">Have something you would like to add?</h2>
 	<input type="hidden" name="question" value="{{ question.title }}">
 	<dl>
 		<dt style="margin-left: 100px"> {{ form.answer.label() }}
