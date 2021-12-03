@@ -12,7 +12,7 @@ from app import db
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import random
-
+import os
 
 @app.route("/")
 @app.route("/home")
@@ -387,6 +387,7 @@ def best_answer():
         admin.bestID = bestans
     db.session.commit()
     return redirect(url_for('viewquestion_page') + '?question=' + quesTitle + "&viewed=true")
+
 
 
 @app.route('/upload', methods=["POST"])
