@@ -16,8 +16,7 @@
 			<a class="text" style="margin-left: 10px" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
     </h4>
     <h6>
-    	<p class="text" style="margin-left: 40px">Asked by {{q.username}} on {{ q.questionaskdate}}<br>Viewed {{q.viewCount}} times</p>
-    </h6>
+		<p class="text" style="margin-left: 40px">Asked by <a href="{{ url_for('account_page') }}?user={{q.username}}">{{q.username}}</a> on {{ q.questionaskdate}}<br>Viewed {{q.viewCount}} times</p>    </h6>
       <br>
 		
 		{% endfor %}
