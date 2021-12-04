@@ -6,6 +6,7 @@
 <body>
     {% block navbar %} {{ super() }} {% endblock %}
 
+    
     <main role="main">
 	<br>
 	<h1 class="centerstuff"> My Account</h1><br>
@@ -28,6 +29,26 @@
                 <h6>Username: {{ current_user.username }}</h6>
                 <h6>Email: {{ current_user.email }}</h6>
                 <br>
+
+                <div class="container">
+
+                    <form method="POST" class="form-modifyinfo">
+
+                        {{ form.hidden_tag() }}
+
+                        {{ form.newUsername.label() }}
+                        {{ form.newUsername(class="form-control", placeholder="User Name") }}
+                        <br>
+                        {{ form.newEmail.label() }}
+                        {{ form.newEmail(class="form-control", placeholder="Email Address") }}
+
+                        {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+                    </form>
+                </div>
+
+
+                <br>
+
             
                 <h6>Profile Statistics:</h6>
             
@@ -40,7 +61,7 @@
             </div>
 
         </div>
-
+        
         <!-- second column of html page -->
         <div class="column2">
 
@@ -139,10 +160,6 @@
         }
 	</style>
 	
-
 	<br>
-
-
-
 {% endblock %}
 </body>

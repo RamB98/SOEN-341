@@ -8,7 +8,7 @@ from flask_login import login_user, logout_user, login_required
 from sqlalchemy.sql.functions import current_user
 from . import app
 from app.models import Answer, Bookmark, Question, User, VotesAnswer, VotesQuestion
-from app.forms import AnswerForm, RegisterForm, LoginForm, PostForm
+from app.forms import AnswerForm, RegisterForm, LoginForm, PostForm, ModifyInfoForm
 from app import db
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -106,18 +106,32 @@ def forum_page():
     q = Question.query.all()
     return render_template('Forum.html', questions=q)
 
-@app.route('/account', methods=["GET"])
+@app.route('/account', methods=["POST", "GET"])
 @login_required
 def account_page():
+
+    form=ModifyInfoForm()
     username = request.args.get('user')
     print("This is the username: " + username)
     loggedIn = flask_login.current_user
+    user = User.query.filter_by(username=loggedIn.username).first()
+
+    #for modifying user credentials such as username and email:
+    if form.validate_on_submit():
+        newEmail = form.newEmail.data
+        newUsername = form.newUsername.data
+        setattr(user, "email", newEmail)
+        setattr(user, "username", newUsername)
+        db.session.commit()
+        flash(f'User information changed successfully', category='success')
+        return redirect(url_for('account_page') + "?user=" + loggedIn.username)
+
     allq = Question.query.all()
     user = None
     if not username:
         redirect(url_for('login_page'))
     elif username == loggedIn.username:
-            user = loggedIn
+        user = loggedIn
     else:
         user = User.query.filter_by(username=username).first()
 
@@ -141,10 +155,12 @@ def account_page():
     vaN = VotesAnswer.query.filter_by(user=user.username, vote="-1")
     vaNcount = vaN.count()
 
+
+    print(user.img)
     img = user.img
     return render_template('Account.html', questions=q, answers=a, allquestions=allq, 
         upVQC=vqPcount, downVQC=vqNcount, upVAC=vaPcount, downVAC=vaNcount,
-        bookmarks=b, img=img, user=user)
+        bookmarks=b, img=img, user=user, form=form)
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
