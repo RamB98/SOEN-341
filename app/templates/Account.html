@@ -26,29 +26,41 @@
                     </form>
                     <br>
                 {% endif %}
-                <h6>Username: {{ current_user.username }}</h6>
-                <h6>Email: {{ current_user.email }}</h6>
+                <h6>Username: {{ user.username }}</h6>
+                <h6>Email: {{ user.email }}</h6>
                 <br>
 
-                <div class="container">
+                {% if user == current_user %}
+                    <form action="#" method="POST" class="form-modifyusername">
 
-                    <form method="POST" class="form-modifyinfo">
+                        {{ usernameForm.hidden_tag() }}
 
-                        {{ form.hidden_tag() }}
-
-                        {{ form.newUsername.label() }}
-                        {{ form.newUsername(class="form-control", placeholder="User Name") }}
-                        <br>
-                        {{ form.newEmail.label() }}
-                        {{ form.newEmail(class="form-control", placeholder="Email Address") }}
-
-                        {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+                        {{ usernameForm.newUsername.label() }}
+                        {{ usernameForm.newUsername(class="form-control", placeholder="Username", style="float: left; width: 78%") }}
+                        {{ usernameForm.submit(class="btn btn-primary", style="float: left; width: 18%; margin-left: 2%; margin-bottom: 2%") }}
                     </form>
-                </div>
 
+                    <form action="#" method="POST" class="form-modifypassword">
 
-                <br>
+                        {{ passwordForm.hidden_tag() }}
 
+                        {{ passwordForm.newPassword.label() }}
+                        {{ passwordForm.newPassword(class="form-control", placeholder="Password", style="float: left; width: 78%") }}
+                        {{ passwordForm.submit(class="btn btn-primary", style="float: left; width: 18%; margin-left: 2%; margin-bottom: 2%") }}
+                    </form>
+
+                    <form action="#" method="POST" class="form-modifyemail">
+
+                        {{ emailForm.hidden_tag() }}
+
+                        {{ emailForm.newEmail.label() }}
+                        {{ emailForm.newEmail(class="form-control", placeholder="Email", style="float: left; width: 78%") }}
+                        {{ emailForm.submit(class="btn btn-primary", style="float: left; width: 18%; margin-left: 2%; margin-bottom: 2%") }}
+                    </form>
+
+                    <br><br><br>
+
+                {% endif %}
             
                 <h6>Profile Statistics:</h6>
             
@@ -73,7 +85,7 @@
                     <a class="hide-overflow" style="margin-left: 5%" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
                 </h4>
                 <h6>
-                <p class="text ignore-css" style="margin-left: 10%">Asked on {{ q.questionaskdate}}</p>
+                    <p class="text ignore-css" style="margin-left: 10%">Asked on {{ q.questionaskdate}}</p>
                 </h6>
                 <br>
                 {% endfor %}
@@ -90,7 +102,7 @@
                     {%for q in allquestions %}
                         {% if q.id == a.question_id %}
                             <h6>
-                                <a class="text" style="margin-left: 15%" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
+                                <a class="hide-overflow" style="margin-left: 15%" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
                             </h6>
                         {% endif %}
                     {% endfor %}
@@ -115,26 +127,20 @@
 
     <style>
         .column1 {
-        margin-left: 20px;
+        margin-left: 2%;
         float: left;
-        width: 30%;
+        width: 28%;
         }
 
         .column2 {
             direction: ltr;
             float: left;
-            width: 32.5%;
+            width: 34%;
         }
 
         .column3 {
             float: left;
-            width: 32.5%;
-        }
-
-        .row:after {
-        content: "";
-        display: table;
-        clear: both;
+            width: 34%;
         }
 
         .centerstuff{
@@ -151,6 +157,7 @@
         }
 
         a{
+            display: block;
             overflow: hidden;
             white-space: nowrap;
         }
@@ -160,6 +167,5 @@
         }
 	</style>
 	
-	<br>
 {% endblock %}
 </body>

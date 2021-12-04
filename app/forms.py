@@ -49,7 +49,14 @@ class AnswerForm(FlaskForm):
     answer = TextAreaField('Enter your answer to this question here:',widget=TextArea(), validators=[DataRequired()])
     submit = SubmitField(label='Post Answer')
 
-class ModifyInfoForm(FlaskForm):
+class ModifyUsernameForm(FlaskForm):
     newUsername=StringField(label='Modify Username:', validators=[DataRequired()])
+    submit=SubmitField(label='Save')
+
+class ModifyPasswordForm(FlaskForm):
+    newPassword=StringField(label='Modify Password:', validators=[DataRequired()])
+    submit=SubmitField(label='Save')
+
+class ModifyEmailForm(FlaskForm):
     newEmail=StringField(label='Modify Email:', validators=[DataRequired()])
-    submit=SubmitField(label='Save New Information')
+    submit=SubmitField(label='Save')

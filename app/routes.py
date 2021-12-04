@@ -8,7 +8,7 @@ from flask_login import login_user, logout_user, login_required
 from sqlalchemy.sql.functions import current_user
 from . import app
 from app.models import Answer, Bookmark, Question, User, VotesAnswer, VotesQuestion
-from app.forms import AnswerForm, RegisterForm, LoginForm, PostForm, ModifyInfoForm
+from app.forms import AnswerForm, RegisterForm, LoginForm, PostForm, ModifyUsernameForm, ModifyEmailForm, ModifyPasswordForm
 from app import db
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -107,33 +107,78 @@ def forum_page():
     return render_template('Forum.html', questions=q)
 
 @app.route('/account', methods=["POST", "GET"])
-@login_required
 def account_page():
 
-    form=ModifyInfoForm()
+    usernameForm=ModifyUsernameForm()
+    passwordForm=ModifyPasswordForm()
+    emailForm=ModifyEmailForm()
     username = request.args.get('user')
-    print("This is the username: " + username)
     loggedIn = flask_login.current_user
-    user = User.query.filter_by(username=loggedIn.username).first()
-
-    #for modifying user credentials such as username and email:
-    if form.validate_on_submit():
-        newEmail = form.newEmail.data
-        newUsername = form.newUsername.data
-        setattr(user, "email", newEmail)
-        setattr(user, "username", newUsername)
-        db.session.commit()
-        flash(f'User information changed successfully', category='success')
-        return redirect(url_for('account_page') + "?user=" + loggedIn.username)
-
-    allq = Question.query.all()
     user = None
     if not username:
-        redirect(url_for('login_page'))
-    elif username == loggedIn.username:
-        user = loggedIn
+        flash(f'Please log in to access this page', category="success")
+        return redirect(url_for('login_page'))
+    if loggedIn.is_authenticated:
+        if username == loggedIn.username:
+            user = loggedIn
+        else:
+            user = User.query.filter_by(username=username).first()
     else:
         user = User.query.filter_by(username=username).first()
+
+    if request.method == 'POST':
+        #for modifying user credentials:
+        if usernameForm.validate_on_submit():
+            newUsername = usernameForm.newUsername.data
+
+            #change every username save in other DBs
+            questions = Question.query.filter_by(username=user.username)
+            for q in questions:
+                setattr(q, "username", newUsername)
+            
+            answers = Answer.query.filter_by(username=user.username)
+            for a in answers:
+                setattr(a, "username", newUsername)
+            
+            bookmarks = Bookmark.query.filter_by(user=user.username)
+            for b in bookmarks:
+                setattr(b, "user", newUsername)
+            
+            questionUpvotes = VotesQuestion.query.filter_by(user=user.username, vote="1")
+            for qU in questionUpvotes:
+                setattr(qU, "user", newUsername)
+
+            questionDownvotes = VotesQuestion.query.filter_by(user=user.username, vote="-1")
+            for qD in questionDownvotes:
+                setattr(qD, "user", newUsername)
+
+            answerUpvotes = VotesAnswer.query.filter_by(user=user.username, vote="1")
+            for aU in answerUpvotes:
+                setattr(aU, "user", newUsername)
+
+            answerDownvotes = VotesAnswer.query.filter_by(user=user.username, vote="-1")
+            for aD in answerDownvotes:
+                setattr(aD, "user", newUsername)
+
+            setattr(user, "username", newUsername)
+            db.session.commit()
+            flash(f'Username changed successfully!', category='success')
+
+        if passwordForm.validate_on_submit():
+            newPassword = passwordForm.newPassword.data
+            setattr(user, "password", newPassword)
+            db.session.commit()
+            flash(f'Password changed successfully!', category='success')
+
+        if emailForm.validate_on_submit():
+            newEmail = emailForm.newEmail.data
+            setattr(user, "email", newEmail)
+            db.session.commit()
+            flash(f'Email changed successfully!', category='success')
+
+        username = loggedIn.username
+    
+    allq = Question.query.all()
 
     q = Question.query.filter_by(username=user.username)
     a = Answer.query.filter_by(username=user.username)
@@ -155,12 +200,11 @@ def account_page():
     vaN = VotesAnswer.query.filter_by(user=user.username, vote="-1")
     vaNcount = vaN.count()
 
-
     print(user.img)
     img = user.img
     return render_template('Account.html', questions=q, answers=a, allquestions=allq, 
         upVQC=vqPcount, downVQC=vqNcount, upVAC=vaPcount, downVAC=vaNcount,
-        bookmarks=b, img=img, user=user, form=form)
+        bookmarks=b, img=img, user=user, usernameForm=usernameForm, passwordForm=passwordForm, emailForm=emailForm)
 
 @app.route('/viewquestion', methods=["POST", "GET"])
 def viewquestion_page():
@@ -417,8 +461,8 @@ def upload_page():
         flash(f'No file uploaded', category='danger')
     else:
         if loggedin.img == "DefaultProfile.png":
-            setattr(loggedin, "img", loggedin.username + "Pic")
+            setattr(loggedin, "img", "user" + str(loggedin.id) + "Pic")
             db.session.commit()
-        pic.save(safe_join('app/static/images/profilePics', loggedin.username + "Pic"))
+        pic.save(safe_join('app/static/images/profilePics', "user" + str(loggedin.id) + "Pic"))
         flash(f'Image uploaded to db', category='success')
     return redirect(url_for('account_page') + "?user=" + loggedin.username)
