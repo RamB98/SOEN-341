@@ -8,21 +8,27 @@
 
     <main role="main">
 	<br>
-	<h1>Question Forum</h1><br>
+	<h1 class="question-title">Question Forum</h1><br>
 
-	<div>
+	<div class="question">
 		{% for q in questions %}
-		<h4>
-			<a class="text" style="margin-left: 10px" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a>
-    </h4>
-    <h6>
-		<p class="text" style="margin-left: 40px">Asked by <a href="{{ url_for('account_page') }}?user={{q.username}}">{{q.username}}</a> on {{ q.questionaskdate}}<br>Viewed {{q.viewCount}} times</p>    </h6>
-      <br>
-		
+		<hr class="featurette-divider">
+	  
+		<div class="row featurette">
+		  <div class="col-md-11 order-md-2">
+			<h2><a class="featurette-heading" style="margin-left: 10px" href="{{ url_for('viewquestion_page') }}?question={{ q.title }}">{{ q.title }}</a></h2>
+			<h3 class="text"><a href="{{ url_for('account_page') }}?user={{q.username}}">{{q.username}}</a> <small class="text-muted">on {{ q.questionaskdate}} | Viewed {{q.viewCount}} times</small></h3>
+			<p class="lead">{{ q.question }}</p>
+		  </div>
+		  <div class="col-md-1 order-md-1">
+			<img class="featurette-image-right img-fluid mx-auto" src="/static/images/QuestionMarkImage.png" alt="Generic placeholder image">
+		  </div>
+		</div>
 		{% endfor %}
 	</div>
 
 	<br>
 
 {% endblock %}
+{% block foot %} {{ super() }} {% endblock %}
 </body>
